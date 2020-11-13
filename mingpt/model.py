@@ -180,7 +180,7 @@ class GPT(nn.Module):
     def forward(self, idx, targets=None):
         b, t = idx.size()
         assert t <= self.block_size, "Cannot forward, model block size is exhausted."
-
+        
         # forward the GPT model
         token_embeddings = self.tok_emb(idx) # each index maps to a (learnable) vector
         position_embeddings = self.pos_emb[:, :t, :] # each position maps to a (learnable) vector
@@ -191,6 +191,7 @@ class GPT(nn.Module):
 
         # if we are given some desired targets also calculate the loss
         loss = None
+    
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
 
