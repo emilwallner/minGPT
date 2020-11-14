@@ -1,12 +1,12 @@
 # Todo
 
-- [ ] Create simple dataset with DeepMind math generator
+- [x] Create simple dataset with DeepMind math generator
 
-- [ ] Create vocab for DeepMind dataset
+- [x] Create vocab for DeepMind dataset
 
-- [ ] Create dataloader for dataset
+- [x] Create dataloader for dataset
 
-- [ ] Create Transformer arch
+- [x] Create Transformer arch
 
 - [ ] Create 7 head input
 
