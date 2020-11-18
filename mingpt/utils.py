@@ -25,8 +25,10 @@ def sample(model, x, steps, temperature=1.0, sample=False, top_k=None):
     of block_size, unlike an RNN that has an infinite context window.
     """
     block_size = model.get_block_size()
+    #model = model.to(torch.cuda.current_device())
     model.eval()
     for k in range(steps):
+     
         x_cond = x if x.size(1) <= block_size else x[:, -block_size:] # crop context if needed
         logits, _ = model(x_cond)
         # pluck the logits at the final step and scale by temperature
@@ -45,3 +47,16 @@ def sample(model, x, steps, temperature=1.0, sample=False, top_k=None):
         x = torch.cat((x, ix), dim=1)
 
     return x
+
+class Tokenizer:
+    """ Tokenizer helper functions """
+
+    def __init__(self, dataset):
+        self.t = dataset.t
+        self.idx = dataset.idx
+
+    def tensor2string(self, tensor):
+        return ''.join([self.idx[tok] for tok in tensor.tolist()])
+
+    def locateToken(self, token, tensor):
+        return None if self.t[token] not in tensor.tolist() else tensor.tolist().index(self.t[token])

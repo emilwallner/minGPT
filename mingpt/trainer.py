@@ -29,7 +29,7 @@ class TrainerConfig:
     warmup_tokens = 375e6 # these two numbers come from the GPT-3 paper, but may not be good defaults elsewhere
     final_tokens = 260e9 # (at what point we reach 10% of original LR)
     # checkpoint settings
-    ckpt_path = None
+    ckpt_path = 'model.pth'
     num_workers = 0 # for DataLoader
 
     def __init__(self, **kwargs):
@@ -48,13 +48,14 @@ class Trainer:
         self.device = 'cpu'
         if torch.cuda.is_available():
             self.device = torch.cuda.current_device()
-            self.model = torch.nn.DataParallel(self.model).to(self.device)
+            self.model = self.model.to(self.device)
+            #self.model = torch.nn.DataParallel(self.model).to(self.device)
 
     def save_checkpoint(self):
         # DataParallel wrappers keep raw model object in .module attribute
         raw_model = self.model.module if hasattr(self.model, "module") else self.model
         logger.info("saving %s", self.config.ckpt_path)
-        torch.save(raw_model.state_dict(), self.config.ckpt_path)
+        torch.save(raw_model, self.config.ckpt_path)
 
     def train(self):
         model, config = self.model, self.config
