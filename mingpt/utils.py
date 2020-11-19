@@ -1,6 +1,8 @@
 import random
 import numpy as np
 import torch
+import string
+import os
 import torch.nn as nn
 from torch.nn import functional as F
 
@@ -47,16 +49,3 @@ def sample(model, x, steps, temperature=1.0, sample=False, top_k=None):
         x = torch.cat((x, ix), dim=1)
 
     return x
-
-class Tokenizer:
-    """ Tokenizer helper functions """
-
-    def __init__(self, dataset):
-        self.t = dataset.t
-        self.idx = dataset.idx
-
-    def tensor2string(self, tensor):
-        return ''.join([self.idx[tok] for tok in tensor.tolist()])
-
-    def locateToken(self, token, tensor):
-        return None if self.t[token] not in tensor.tolist() else tensor.tolist().index(self.t[token])
