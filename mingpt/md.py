@@ -52,22 +52,23 @@ class MemData:
             for index in indexes:
                 file.write(src[index] + '\n')
                 file.write(trg[index] + '\n')
-                for _ in range(self.mem_slots):
-                     file.write('\n')
+                if self.mem_slots:
+                    for _ in range(self.mem_slots + 1):
+                         file.write('\n')
     
     
     def prepare_data(self, fname):
         # split up all addition problems into either training data or test data
         # head_tail = os.path.split(fname)
+        slots = self.mem_slots + 3 if self.memslots else 2
         dataset = []
-        for _ in range(self.mem_slots + 2):
+        for _ in range(slots):
             dataset.append([])
         with open(fname, "r") as file:
             text = file.read()[:-1] # Excluding the final linebreak
             text_list = text.split('\n')
-            idx = self.mem_slots + 2
-            for i in range(self.mem_slots + 2):
-                dataset[i] = text_list[i:][::idx]
+            for i in range(slots):
+                dataset[i] = text_list[slots:][::slots]
         
         self.max_src = len(max(dataset[0], key=len)) + 1# +1 for ending token
         self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
@@ -88,9 +89,29 @@ class MemData:
         trg = list(data[1]) + ['finish']
         mem = []
         if self.mem_slots:
-            for i in range(2, len(data)):
-                mem += list(data[i]) + ['mem']
+            memory = update_memory(data)
+            for item in range(memory):
+                mem += list(item) + ['mem']
             
+        return src, mem, trg
+    
+    def update_memory(self, data):
+        if data[2] in data[3:]: # Check if previous guesss is in memory
+            return data[3:]
+        else:
+            return data[2] + data[3:-1] # Shift memory with one and add new memory
+    
+    def create_marker_data(self, data):
+        src = list(data[0]) + ['answer']
+        if self.mem_slots:
+            for item in range(data[3:]):
+                mem += list(item) + ['mem']
+        
+        if(bool(random.getrandbits(1))): # Randomly choose right or wrong example
+            trg = list(data[1]) + ['finish'] + ['right']
+        else:
+            trg = list(data[2]) + ['finish'] + ['wrong']
+
         return src, mem, trg
     
     def x2Canvas(self, src_mem_trg):
