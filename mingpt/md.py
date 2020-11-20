@@ -6,6 +6,73 @@ import os
 import torch.nn as nn
 from torch.nn import functional as F
 
+from torch.utils.data import Dataset
+
+class MathDataset(Dataset):
+    """
+    Lorum ipsum ;)
+    
+    """
+
+    def __init__(self, fname, MD):
+        self.MD = MD
+        self.mem_slots = MD.mem_slots
+        self.dataset = self.MD.prepare_data(fname) # Extract data, source, memory, and target        
+        self.ixes = np.array(list(range(len(self.dataset[0])))) 
+        
+    def __len__(self):
+        return self.ixes.size
+
+    def __getitem__(self, idx):
+        
+        xy = []
+        for i in range(self.mem_slots + 3):
+            xy.append(self.dataset[i][idx])
+            
+        src, mem, trg = self.MD.create_x_y_pair(xy)
+        src_mem_trg = self.MD.list2tokens(src + mem + trg)
+        x = self.MD.x2Canvas(src_mem_trg)
+        y = self.MD.y2Canvas(src_mem_trg)
+        y = self.MD.mask_padding(y)
+
+        x = torch.tensor(x, dtype=torch.long)
+        y = torch.tensor(y, dtype=torch.long) 
+        y = self.MD.mask_question_memory(y, len(src + mem)-1) # we will only train in the output locations. -100 will mask loss to zero
+        
+        return x, y
+
+class MarkerDataset(Dataset):
+    """
+    Dataset that only trains right or wrong.
+    
+    """
+
+    def __init__(self, fname, MD):
+        self.MD = MD
+        self.mem_slots = MD.mem_slots
+        self.dataset = self.MD.prepare_data(fname) # Extract data, source, memory, and target        
+        self.ixes = np.array(list(range(len(self.dataset[0])))) 
+        
+    def __len__(self):
+        return self.ixes.size
+
+    def __getitem__(self, idx):
+        
+        xy = []
+        for i in range(self.mem_slots + 3):
+            xy.append(self.dataset[i][idx])
+            
+        src, mem, trg = self.MD.create_marker_data(xy)
+        src_mem_trg = self.MD.list2tokens(src + mem + trg)
+        x = self.MD.x2Canvas(src_mem_trg)
+        y = self.MD.y2Canvas(src_mem_trg)
+        y = self.MD.mask_padding(y)
+
+        x = torch.tensor(x, dtype=torch.long)
+        y = torch.tensor(y, dtype=torch.long) 
+        y = self.MD.mask_question_memory(y, len(src + mem + trg) - 2) # we will only train in the output locations. -100 will mask loss to zero
+        
+        return x, y
 
 class MemData:
     """ Clean data, tokenizer, helper functions """
@@ -60,7 +127,7 @@ class MemData:
     def prepare_data(self, fname):
         # split up all addition problems into either training data or test data
         # head_tail = os.path.split(fname)
-        slots = self.mem_slots + 3 if self.memslots else 2
+        slots = (self.mem_slots + 3) if self.mem_slots else 2
         dataset = []
         for _ in range(slots):
             dataset.append([])
@@ -68,11 +135,11 @@ class MemData:
             text = file.read()[:-1] # Excluding the final linebreak
             text_list = text.split('\n')
             for i in range(slots):
-                dataset[i] = text_list[slots:][::slots]
+                dataset[i] = text_list[i:][::slots]
         
         self.max_src = len(max(dataset[0], key=len)) + 1# +1 for ending token
         self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
-        
+
         # Src tokens, target tokens, memory tokens, and corresponding end tokens
         self.block_size = self.max_src + (self.max_trg * (self.mem_slots + 1)) + 1 # An extra for right/wrong token
         return dataset
@@ -89,8 +156,8 @@ class MemData:
         trg = list(data[1]) + ['finish']
         mem = []
         if self.mem_slots:
-            memory = update_memory(data)
-            for item in range(memory):
+            memory = self.update_memory(data)
+            for item in memory:
                 mem += list(item) + ['mem']
             
         return src, mem, trg
@@ -103,8 +170,9 @@ class MemData:
     
     def create_marker_data(self, data):
         src = list(data[0]) + ['answer']
+        mem = []
         if self.mem_slots:
-            for item in range(data[3:]):
+            for item in data[3:]:
                 mem += list(item) + ['mem']
         
         if(bool(random.getrandbits(1))): # Randomly choose right or wrong example
@@ -136,9 +204,8 @@ class MemData:
     def mask_padding(self, digits):
         return [-100 if tok == self.t['pad'] else tok for tok in digits]
     
-    def mask_question_memory(self, y, src, mem):
-        src_mem = src + mem
-        y[:len(src_mem)] = -100
+    def mask_question_memory(self, y, mask_len):
+        y[:mask_len] = -100
         return y
 
     def locate_token(self, token, tensor):
