@@ -1,19 +1,17 @@
 from torch.utils.data.dataloader import DataLoader
 from tqdm.auto import tqdm
+import torch
 from mingpt.utils import sample
 import numpy as np
 import os
 
-class Exam:
+class Examiner:
     """ Clean data, tokenizer, helper functions """
 
-    def __init__(self, dataset, MD, trainer, fname):
+    def __init__(self, MD):
         # MemData, Trainer, and Dataset classes
         self.mem_slots = MD.mem_slots
         self.max_trg = MD.max_trg
-        self.trainer = trainer
-        self.dataset = dataset
-        self.fname = fname
         self.MD = MD
         
         # Batch settings
@@ -25,18 +23,20 @@ class Exam:
         self.prev_src_len = 0
         self.predict = 0
         self.batch = 0
-        self.x_in = 0
         
         # Store results
         self.results = []
         self.correct_buffer = []
         self.train_buffer = []
     
-    def run(self, fname):
+    def exam(self, fname, dataset, trainer):
         
-        loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+        self.fname = fname
+        self.trainer = trainer
+        
+        loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         pbar = tqdm(enumerate(loader), total=len(loader))
-    
+        x_in = []
         for batch, (x, y) in pbar:
             
             x, x_in = self.concatenate_batches(x, x_in)
@@ -52,14 +52,13 @@ class Exam:
         
         results = self.results
         print("Final score: %d/%d = %.2f%% correct" % (np.sum(results), len(results), 100*np.mean(results)))
-        
         print("Saving new files to disk...")
-        self.save_result_to_file(self)
+        self.save_result_to_file()
                     
 
     def concatenate_batches(self, x, x_in):
         
-        src_len = self.MD.locateToken('answer', x[0]) 
+        src_len = self.MD.locate_token('answer', x[0]) 
         x_in = leftover if self.prev_src_len == -1 else x_in
 
         # Concat input source with same length
@@ -78,49 +77,49 @@ class Exam:
         
     def make_prediction(self, x_in):
         
-        clip_src_mem = self.MD.locateToken('answer', x_in[0]) + 1 
+        clip_src_mem = self.MD.locate_token('answer', x_in[0]) + 1 
         if self.mem_slots:
-            clip_src_mem = self.MD.locateToken('mem-end', x_in[0]) + 1
+            clip_src_mem = self.MD.locate_token('mem-end', x_in[0]) + 1
 
         self.batch, self.predict, self.prev_src_len, = 0, 0, 0
         x_cut = x_in[:, :clip_src_mem]
 
         pred = x_cut.to(self.trainer.device)
-        pred = sample(model, pred, int(self.max_trg+1))
+        pred = sample(self.trainer.model, pred, int(self.max_trg+1))
         
-        return out, clip_src_mem
+        return pred, clip_src_mem
     
     def extract_src_trg_pred_mem(self, x, pred, cut_src_mem):
         
         # Extract src from data
-        cut_src = self.MD.locateToken('answer', x)
+        cut_src = self.MD.locate_token('answer', x)
         src =  x[:cut_src]
         
         # Extract trg from data
-        cut_padding = self.MD.locateToken('pad', x)
+        cut_padding = self.MD.locate_token('pad', x)
         trg = x[cut_src_mem:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
-        cut_pred = self.MD.locateToken('finish', pred)
+        cut_pred = self.MD.locate_token('finish', pred)
         pred = pred[cut_src_mem:cut_pred]
         
         # Extract memory from data
         mem = []
         if self.mem_slots:
-            mem = self.tensor_to_mem_slots(x[cut_src:])
+            mem = self.tensor_to_mem_slots(x[cut_src+1:])
         
         # Translate the tensors to strings
         src = self.MD.tensor2string(src)
         trg = self.MD.tensor2string(trg)
         pred = self.MD.tensor2string(pred) 
         
-        return src + trg + pred + mem
+        return [src] + [trg] + [pred] + mem
     
     def tensor_to_mem_slots(self, x):
         
         mem = []
         for i in range(self.mem_slots):
-            cut = self.MD.locateToken('mem', x)
+            cut = self.MD.locate_token('mem', x)
             mem_string = self.MD.tensor2string(x[:cut])
             mem.append(mem_string)
             x = x[cut:]
@@ -136,26 +135,26 @@ class Exam:
         else:
             self.train_buffer.append(src_trg_pred_mem)
 
-    def save_results_to_file(self):
+    def save_result_to_file(self):
         
-        fname_head_tail = os.path.split(self.fname)
-        correct_fname = head_tail[0] + '/correct_buffer_' + head_tail[1]
-        train_fname = head_tail[0] + '/train_buffer_' + head_tail[1]
+        head_tail = os.path.split(self.fname)
+        correct_fname = head_tail[0] + '/' + head_tail[1]
+        train_fname = head_tail[0] + '/' + head_tail[1]
         
         if os.path.exists(correct_fname):
             os.remove(correct_fname)
         if os.path.exists(train_fname):
             os.remove(train_fname)
         
-        with open(correct_fname, "a") as correct_fname:
+        with open(correct_fname, "a") as file:
             indexes = self.sort_data_by_srcmem_len(self.correct_buffer)
-            for index in range(indexes):
+            for index in indexes:
                 for item in self.correct_buffer[index]:
                     file.write(item + '\n')
         
-        with open(train_fname, "a") as train_fname:
+        with open(train_fname, "a") as file:
             indexes = self.sort_data_by_srcmem_len(self.train_buffer)
-            for index in range(len(self.train_buffer)):
+            for index in indexes:
                 for item in self.train_buffer[index]:
                     file.write(item + '\n')
         

@@ -137,10 +137,7 @@ class MemData:
         return [self.t[tok] for tok in src_mem_trg]
         
     def tensor2string(self, tensor):
-        if not tensor:
-            return ''
-        else:
-            return ''.join([self.idx[tok] for tok in tensor.tolist()])
+        return ''.join([self.idx[tok] for tok in tensor.tolist()])
     
     def tensor2list(self, tensor):
         return [self.idx[tok] for tok in tensor.tolist()]
