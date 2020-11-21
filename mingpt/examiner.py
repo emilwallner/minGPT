@@ -1,5 +1,5 @@
 from torch.utils.data.dataloader import DataLoader
-from tqdm.auto import tqdm
+from tqdm import tqdm
 import torch
 from mingpt.utils import sample
 import numpy as np
@@ -17,7 +17,7 @@ class Examiner:
         # Batch settings
         self.batch_size = 1
         self.max_batch_size = 512
-        self.nbr_predictions = -1
+        self.nbr_predictions = 10000
         
         # Variables for prediction loop
         self.prev_src_len = 0
@@ -46,7 +46,9 @@ class Examiner:
                 for i in range(x_in.size(0)):
                     src_trg_pred_mem = self.extract_src_trg_pred_mem(x_in[i], pred[i], clip_src)
                     self.log_results(src_trg_pred_mem)
-        
+            
+            # report progress
+            pbar.set_description(f"Iiter {batch}: train loss {100*np.mean(self.results):.5f}.")
             if self.nbr_predictions >= 0 and batch+1 >= self.nbr_predictions:
                 break
         
@@ -58,11 +60,11 @@ class Examiner:
 
     def concatenate_batches(self, x, x_in):
         
-        src_len = self.MD.locate_token('answer', x[0]) 
+        clip_src_mem = self.get_clip_src_mem_len(x[0]) 
         x_in = leftover if self.prev_src_len == -1 else x_in
 
         # Concat input source with same length
-        if self.prev_src_len == src_len:
+        if self.prev_src_len == clip_src_mem:
             x_in = torch.cat((x_in, x), 0)
         elif self.prev_src_len == 0:
             x_in = x
@@ -70,24 +72,30 @@ class Examiner:
             self.prev_src_len = -1
             self.predict = 1
             leftover = x
-        self.prev_src_len = src_len
+        self.prev_src_len = clip_src_mem
         self.batch += 1
         
         return x, x_in
         
     def make_prediction(self, x_in):
         
-        clip_src_mem = self.MD.locate_token('answer', x_in[0]) + 1 
-        if self.mem_slots:
-            clip_src_mem = self.MD.locate_token('mem-end', x_in[0]) + 1
-
+        # Reset tracker variables
         self.batch, self.predict, self.prev_src_len, = 0, 0, 0
+        clip_src_mem = self.get_clip_src_mem_len(x_in[0]) + 1 
         x_cut = x_in[:, :clip_src_mem]
 
         pred = x_cut.to(self.trainer.device)
         pred = sample(self.trainer.model, pred, int(self.max_trg+1))
         
         return pred, clip_src_mem
+    
+    def get_clip_src_mem_len(self, x):
+        
+        clip_src_mem = self.MD.locate_token('answer', x) 
+        if self.mem_slots:
+            clip_src_mem = self.MD.locate_token('mem-end', x) 
+        
+        return clip_src_mem
     
     def extract_src_trg_pred_mem(self, x, pred, cut_src_mem):
         
@@ -138,7 +146,7 @@ class Examiner:
     def save_result_to_file(self):
         
         head_tail = os.path.split(self.fname)
-        correct_fname = head_tail[0] + '/' + head_tail[1]
+        correct_fname = head_tail[0] + '/correct_' + head_tail[1]
         train_fname = head_tail[0] + '/' + head_tail[1]
         
         if os.path.exists(correct_fname):
@@ -164,7 +172,10 @@ class Examiner:
         for index in indexes:
             tot_len = sum([len(x) for x in data[index]])
             tot_len -= len(data[index][1]) # Subtract target
-            tot_len -= len(data[index][2]) # Subtract prediction
+            if self.mem_slots: 
+                tot_len -= len(data[index][-1]) # Remove latest memory
+            else:
+                tot_len -= len(data[index][2]) # Remove prediction 
             sorted_data.append([index, tot_len])
         
         sorted_data = sorted(sorted_data, key=lambda x: x[1])
