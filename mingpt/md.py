@@ -41,7 +41,7 @@ class MemData:
         
         os.remove(fname)
         test_fname = head_tail[0] + '/test_' + head_tail[1]
-        train_fname = head_tail[0] + '/train_buffer_' + head_tail[1]
+        train_fname = head_tail[0] + '/train_' + head_tail[1]
         
         self.create_new_file(test_fname, src, trg, test_indexes)
         self.create_new_file(train_fname, src, trg, train_indexes)
@@ -107,7 +107,7 @@ class MemData:
         if data[2] in data[3:]: # Check if previous guesss is in memory
             return data[3:]
         else:
-            return data[2] + data[3:-1] # Shift memory with one and add new memory
+            return [data[2]] + data[3:-1] # Shift memory with one and add new memory
     
     def create_marker_data(self, data):
         src = list(data[0]) + ['answer']

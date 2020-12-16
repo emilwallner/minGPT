@@ -10,6 +10,7 @@ from tqdm import tqdm
 import numpy as np
 
 import torch
+import os
 import torch.optim as optim
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data.dataloader import DataLoader
@@ -51,11 +52,14 @@ class Trainer:
             self.model = self.model.to(self.device)
             #self.model = torch.nn.DataParallel(self.model).to(self.device)
 
-    def save_checkpoint(self):
+    def save_checkpoint(self, exp, fname):
         # DataParallel wrappers keep raw model object in .module attribute
         raw_model = self.model.module if hasattr(self.model, "module") else self.model
-        logger.info("saving %s", self.config.ckpt_path)
-        torch.save(raw_model, self.config.ckpt_path)
+        fn_save = os.path.join(exp, fname + '.pth')
+        logger.info("saving %s", fn_save)
+        if not os.path.exists(exp):
+            os.makedirs(exp)
+        torch.save(raw_model, fn_save)
 
     def train(self):
         model, config = self.model, self.config
@@ -128,4 +132,6 @@ class Trainer:
             good_model = self.test_dataset is None or test_loss < best_loss
             if self.config.ckpt_path is not None and good_model:
                 best_loss = test_loss
-                self.save_checkpoint()
+                print('Best Loss: ', best_loss)
+                #self.save_checkpoint()
+        

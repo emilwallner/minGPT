@@ -2,6 +2,7 @@ from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
 import torch
 from mingpt.utils import sample
+import datetime
 import numpy as np
 import os
 
@@ -16,23 +17,25 @@ class Examiner:
         
         # Batch settings
         self.batch_size = 1
-        self.max_batch_size = 512
-        self.nbr_predictions = 10000
+        self.max_batch_size = 256
+        
+    
+    def exam(self, fname, dataset, trainer, testing=-1):
+        
+        self.nbr_predictions = testing
+        self.fname = fname
+        self.trainer = trainer
         
         # Variables for prediction loop
         self.prev_src_len = 0
         self.predict = 0
         self.batch = 0
+        tot_count = 0
         
         # Store results
         self.results = []
         self.correct_buffer = []
         self.train_buffer = []
-    
-    def exam(self, fname, dataset, trainer):
-        
-        self.fname = fname
-        self.trainer = trainer
         
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         pbar = tqdm(enumerate(loader), total=len(loader))
@@ -41,18 +44,20 @@ class Examiner:
             
             x, x_in = self.concatenate_batches(x, x_in)
         
-            if self.predict or self.batch == self.max_batch_size:
+            if self.predict or self.batch == self.max_batch_size or batch+1 == self.nbr_predictions:
                 pred, clip_src = self.make_prediction(x_in)
                 for i in range(x_in.size(0)):
+                    tot_count += 1
                     src_trg_pred_mem = self.extract_src_trg_pred_mem(x_in[i], pred[i], clip_src)
                     self.log_results(src_trg_pred_mem)
             
             # report progress
-            pbar.set_description(f"Iiter {batch}: train loss {100*np.mean(self.results):.5f}.")
+            pbar.set_description(f"Iiter {batch}")
             if self.nbr_predictions >= 0 and batch+1 >= self.nbr_predictions:
                 break
         
         results = self.results
+        print("Total count: ", tot_count)
         print("Final score: %d/%d = %.2f%% correct" % (np.sum(results), len(results), 100*np.mean(results)))
         print("Saving new files to disk...")
         self.save_result_to_file()
@@ -146,7 +151,7 @@ class Examiner:
     def save_result_to_file(self):
         
         head_tail = os.path.split(self.fname)
-        correct_fname = head_tail[0] + '/correct_' + head_tail[1]
+        correct_fname = head_tail[0] + '/correct_' + datetime.datetime.now().strftime('%Y-%m-%d~%H:%M:%S')
         train_fname = head_tail[0] + '/' + head_tail[1]
         
         if os.path.exists(correct_fname):
