@@ -29,7 +29,7 @@ class MathDataset(Dataset):
         for i in range(self.mem_slots + 3):
             xy.append(self.dataset[i][idx])
             
-        src, mem, trg = self.MD.create_x_y_pair(xy)
+        src, mem, trg = self.MD.create_math_data(xy)
         src_mem_trg = self.MD.list2tokens(src + mem + trg)
         x = self.MD.x2Canvas(src_mem_trg)
         y = self.MD.y2Canvas(src_mem_trg)

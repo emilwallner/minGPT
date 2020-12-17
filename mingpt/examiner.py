@@ -6,6 +6,9 @@ import datetime
 import numpy as np
 import os
 
+#remove
+import random, string
+
 class Examiner:
     """ Clean data, tokenizer, helper functions """
 
@@ -30,7 +33,6 @@ class Examiner:
         self.prev_src_len = 0
         self.predict = 0
         self.batch = 0
-        tot_count = 0
         
         # Store results
         self.results = []
@@ -40,6 +42,7 @@ class Examiner:
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         pbar = tqdm(enumerate(loader), total=len(loader))
         x_in = []
+        
         for batch, (x, y) in pbar:
             
             x, x_in = self.concatenate_batches(x, x_in)
@@ -47,7 +50,6 @@ class Examiner:
             if self.predict or self.batch == self.max_batch_size or batch+1 == self.nbr_predictions:
                 pred, clip_src = self.make_prediction(x_in)
                 for i in range(x_in.size(0)):
-                    tot_count += 1
                     src_trg_pred_mem = self.extract_src_trg_pred_mem(x_in[i], pred[i], clip_src)
                     self.log_results(src_trg_pred_mem)
             
@@ -57,7 +59,6 @@ class Examiner:
                 break
         
         results = self.results
-        print("Total count: ", tot_count)
         print("Final score: %d/%d = %.2f%% correct" % (np.sum(results), len(results), 100*np.mean(results)))
         print("Saving new files to disk...")
         self.save_result_to_file()
@@ -70,7 +71,15 @@ class Examiner:
 
         # Concat input source with same length
         if self.prev_src_len == clip_src_mem:
-            x_in = torch.cat((x_in, x), 0)
+            try:
+                x_in = torch.cat((x_in, x), 0)
+            except:
+                print(x.size())
+                print(x_in.size())
+                print(x)
+                print(x_in)
+                print(self.prev_src_len)
+                print(clip_src_mem)
         elif self.prev_src_len == 0:
             x_in = x
         else:
@@ -96,9 +105,10 @@ class Examiner:
     
     def get_clip_src_mem_len(self, x):
         
-        clip_src_mem = self.MD.locate_token('answer', x) 
         if self.mem_slots:
-            clip_src_mem = self.MD.locate_token('mem-end', x) 
+            clip_src_mem = self.MD.locate_token('mem-end', x)
+        else:
+            clip_src_mem = self.MD.locate_token('answer', x) 
         
         return clip_src_mem
     
@@ -113,31 +123,36 @@ class Examiner:
         trg = x[cut_src_mem:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
+        pred = pred[pred > 3] # Filter out padding tokens etc
         cut_pred = self.MD.locate_token('finish', pred)
         pred = pred[cut_src_mem:cut_pred]
-        
-        # Extract memory from data
-        mem = []
-        if self.mem_slots:
-            mem = self.tensor_to_mem_slots(x[cut_src+1:])
         
         # Translate the tensors to strings
         src = self.MD.tensor2string(src)
         trg = self.MD.tensor2string(trg)
         pred = self.MD.tensor2string(pred) 
         
+        # Extract memory from data
+        mem = []
+        if self.mem_slots:
+            mem = self.tensor_to_mem_slots(x[cut_src+1:], pred)
+        
         return [src] + [trg] + [pred] + mem
     
-    def tensor_to_mem_slots(self, x):
+    def tensor_to_mem_slots(self, x, pred):
         
         mem = []
+     
         for i in range(self.mem_slots):
             cut = self.MD.locate_token('mem', x)
             mem_string = self.MD.tensor2string(x[:cut])
+            mem_string = mem_string[:self.max_trg+1] # Cut to max target
             mem.append(mem_string)
-            x = x[cut:]
-        
+            x = x[cut+1:] # Remove mem token
+
+        mem = mem if pred in mem else [pred] + mem[:-1]
         return mem
+
             
     def log_results(self, src_trg_pred_mem):
         
@@ -151,7 +166,7 @@ class Examiner:
     def save_result_to_file(self):
         
         head_tail = os.path.split(self.fname)
-        correct_fname = head_tail[0] + '/correct_' + datetime.datetime.now().strftime('%Y-%m-%d~%H:%M:%S')
+        correct_fname = head_tail[0] + '/correct_' + head_tail[1] + datetime.datetime.now().strftime('%Y-%m-%d~%H:%M:%S')
         train_fname = head_tail[0] + '/' + head_tail[1]
         
         if os.path.exists(correct_fname):
@@ -177,10 +192,8 @@ class Examiner:
         for index in indexes:
             tot_len = sum([len(x) for x in data[index]])
             tot_len -= len(data[index][1]) # Subtract target
-            if self.mem_slots: 
-                tot_len -= len(data[index][-1]) # Remove latest memory
-            else:
-                tot_len -= len(data[index][2]) # Remove prediction 
+            if self.mem_slots:
+                tot_len -= len(data[index][2])
             sorted_data.append([index, tot_len])
         
         sorted_data = sorted(sorted_data, key=lambda x: x[1])

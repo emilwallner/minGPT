@@ -11,11 +11,12 @@ class MemData:
 
     def __init__(self, mem_slots):
         self.mem_slots = mem_slots
-        self.vocab = ['pad', 'answer', 'mem', 'right', 'wrong', 'mem-end', 'finish'] + list(' ' + string.punctuation + string.digits + string.ascii_uppercase + string.ascii_lowercase)
+        self.vocab = ['pad', 'answer', 'mem', 'mem-end', 'finish', 'right', 'wrong'] + list(' ' + string.punctuation + string.digits + string.ascii_uppercase + string.ascii_lowercase)
         self.vocab_size = len(self.vocab) 
         # Max input characters plus max answer characters, 160 + 32 in original dataset
         self.max_src = 0
         self.max_trg = 0
+        self.debug = 1000
         self.split = 0.1
         self.block_size = 0
         self.t = {k: v for v, k in enumerate(self.vocab)} # Character to ID
@@ -32,6 +33,7 @@ class MemData:
             trg = text_list[1:][::2]
         
         data_len = len(src)
+        if self.debug: data_len = self.debug
         r = np.random.RandomState(1337) # make deterministic
         perm = r.permutation(data_len) # Create random indexes
         num_test = int(data_len*self.split) # 10% of the whole dataset
@@ -69,8 +71,9 @@ class MemData:
             for i in range(slots):
                 dataset[i] = text_list[i:][::slots]
         
-        self.max_src = len(max(dataset[0], key=len)) + 1# +1 for ending token
-        self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
+        if not self.max_src:
+            self.max_src = len(max(dataset[0], key=len)) + 1# +1 for ending token
+            self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
 
         # Src tokens, target tokens, memory tokens, and corresponding end tokens
         # An extra for right/wrong token, and one for end of memory
@@ -91,30 +94,24 @@ class MemData:
         test_data_by_length = sorted(test_data_by_length, key=lambda x: x[1])
         return [i[0] for i in test_data_by_length]
     
-    def create_x_y_pair(self, data):
+    def create_math_data(self, data):
         src = list(data[0]) + ['answer'] 
         trg = list(data[1]) + ['finish']
         mem = []
         if self.mem_slots:
-            memory = self.update_memory(data)
-            for item in memory:
+            for item in data[3:]:
                 mem += list(item) + ['mem']
             mem += ['mem-end']
             
         return src, mem, trg
-    
-    def update_memory(self, data):
-        if data[2] in data[3:]: # Check if previous guesss is in memory
-            return data[3:]
-        else:
-            return [data[2]] + data[3:-1] # Shift memory with one and add new memory
     
     def create_marker_data(self, data):
         src = list(data[0]) + ['answer']
         mem = []
         if self.mem_slots:
             for item in data[3:]:
-                mem += list(item) + ['mem']
+                if item != data[2]: mem += list(item) # Remove prediction from memory
+                mem += ['mem']
         
         if(bool(random.getrandbits(1))): # Randomly choose right or wrong example
             trg = list(data[1]) + ['finish'] + ['right']
