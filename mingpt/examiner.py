@@ -41,7 +41,7 @@ class Examiner:
         
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
         dataset_len = len(loader)
-        pbar = tqdm(enumerate(loader), total=len(dataset_len))
+        pbar = tqdm(enumerate(loader), total=dataset_len)
         x_in = []
         
         for batch, (x, y) in pbar:
