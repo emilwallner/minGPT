@@ -16,7 +16,7 @@ class MemData:
         # Max input characters plus max answer characters, 160 + 32 in original dataset
         self.max_src = 0
         self.max_trg = 0
-        self.debug = 1000
+        self.debug = 0
         self.split = 0.1
         self.block_size = 0
         self.t = {k: v for v, k in enumerate(self.vocab)} # Character to ID

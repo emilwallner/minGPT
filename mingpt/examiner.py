@@ -40,14 +40,15 @@ class Examiner:
         self.train_buffer = []
         
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
-        pbar = tqdm(enumerate(loader), total=len(loader))
+        dataset_len = len(loader)
+        pbar = tqdm(enumerate(loader), total=len(dataset_len))
         x_in = []
         
         for batch, (x, y) in pbar:
             
             x, x_in = self.concatenate_batches(x, x_in)
         
-            if self.predict or self.batch == self.max_batch_size or batch+1 == self.nbr_predictions:
+            if self.predict or self.batch == self.max_batch_size or batch+1 == dataset_len:
                 pred, clip_src = self.make_prediction(x_in)
                 for i in range(x_in.size(0)):
                     src_trg_pred_mem = self.extract_src_trg_pred_mem(x_in[i], pred[i], clip_src)
@@ -71,15 +72,7 @@ class Examiner:
 
         # Concat input source with same length
         if self.prev_src_len == clip_src_mem:
-            try:
-                x_in = torch.cat((x_in, x), 0)
-            except:
-                print(x.size())
-                print(x_in.size())
-                print(x)
-                print(x_in)
-                print(self.prev_src_len)
-                print(clip_src_mem)
+            x_in = torch.cat((x_in, x), 0)
         elif self.prev_src_len == 0:
             x_in = x
         else:
