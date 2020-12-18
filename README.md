@@ -9,6 +9,8 @@
 
 - [ ] Debugging and integrate to main loop
 
+- [ ] Add testing score for each compute step, 5% for step 1, 4% for step 2 etc
+
 
 
 # Done
