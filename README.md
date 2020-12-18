@@ -1,4 +1,17 @@
 # Todo
+- [ ] Restructure file format to add a status line in dataset files
+
+- [ ] Implement new temp file logic
+
+- [ ] Implement adaptive compute predicitons
+
+- [ ] Make compute steps a hyper-parameter
+
+- [ ] Debugging and integrate to main loop
+
+
+
+# Done
 
 - [x] Create simple dataset with DeepMind math generator
 
@@ -8,16 +21,15 @@
 
 - [x] Create Transformer arch
 
-- [ ] Create 7 head input
+- [x] Create 7 head input
 
-- [ ] Train until saturation, find way to measure limit
+- [x] Train until saturation, find way to measure limit
 
-- [ ] Add two self-aware tokens
+- [x] Add two self-aware tokens
 
-- [ ] Create a predictor dataset. Predict all test set. Mark if it's correct or not, and train model to predict correct or not. 
+- [x] Create a predictor dataset. Predict all test set. Mark if it's correct or not, and train model to predict correct or not. 
 
-- [ ] Add previous wrong prediction, and step by step for current learning.
+- [x] Add previous wrong prediction, and step by step for current learning.
 
-- [ ] Train until saturation, find way to measure limit
+- [x] Train until saturation, find way to measure limit
 
-- [ ] Add logic to fulfill all 7 memory slots 
