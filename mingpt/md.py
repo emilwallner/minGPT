@@ -16,11 +16,13 @@ class MemData:
         # Max input characters plus max answer characters, 160 + 32 in original dataset
         self.max_src = 0
         self.max_trg = 0
+        self.data_lines = 4
         self.debug = 0
         self.split = 0.1
         self.block_size = 0
         self.t = {k: v for v, k in enumerate(self.vocab)} # Character to ID
         self.idx = {v: k for k, v in self.t.items()} # ID to Character
+        self.idx[-100] = ''
     
     def initiate_mem_slot_data(self, fname):
         # split up all addition problems into either training data or test data    
@@ -54,14 +56,14 @@ class MemData:
                 file.write(src[index] + '\n')
                 file.write(trg[index] + '\n')
                 if self.mem_slots:
-                    for _ in range(self.mem_slots + 1):
+                    for _ in range(self.mem_slots + 2): # Prediction + Data Status
                          file.write('\n')
     
     
     def prepare_data(self, fname):
         # split up all addition problems into either training data or test data
         # head_tail = os.path.split(fname)
-        slots = (self.mem_slots + 3) if self.mem_slots else 2
+        slots = (self.mem_slots + self.data_lines) if self.mem_slots else 2
         dataset = []
         for _ in range(slots):
             dataset.append([])
@@ -99,7 +101,7 @@ class MemData:
         trg = list(data[1]) + ['finish']
         mem = []
         if self.mem_slots:
-            for item in data[3:]:
+            for item in data[self.data_lines:]:
                 mem += list(item) + ['mem']
             mem += ['mem-end']
             
@@ -109,7 +111,7 @@ class MemData:
         src = list(data[0]) + ['answer']
         mem = []
         if self.mem_slots:
-            for item in data[3:]:
+            for item in data[self.data_lines:]:
                 if item != data[2]: mem += list(item) # Remove prediction from memory
                 mem += ['mem']
         

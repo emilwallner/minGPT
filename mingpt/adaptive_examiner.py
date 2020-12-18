@@ -1,4 +1,5 @@
 from torch.utils.data.dataloader import DataLoader
+from mingpt.math_dataset import MathDataset
 from tqdm import tqdm
 import torch
 from mingpt.utils import sample
@@ -9,7 +10,7 @@ import os
 #remove
 import random, string
 
-class Examiner:
+class AdaptiveExaminer:
     """ Clean data, tokenizer, helper functions """
 
     def __init__(self, MD):
@@ -23,8 +24,11 @@ class Examiner:
         self.data_lines = 4
         self.max_batch_size = 358
         
+        # Adaptive Compute
+        self.ac = 10
+        
     
-    def exam(self, fname, dataset, trainer, testing=-1):
+    def exam(self, fname, trainer, testing=-1):
         
         self.nbr_predictions = testing
         self.fname = fname
@@ -40,7 +44,8 @@ class Examiner:
         self.correct_buffer = []
         self.train_buffer = []
         
-        loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
+        train_dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0)
+        loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=False)
         dataset_len = len(loader)
         pbar = tqdm(enumerate(loader), total=dataset_len)
         x_in = []
@@ -117,7 +122,6 @@ class Examiner:
         trg = x[cut_src_mem:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
-        #pred = pred[pred > 3] # Filter out padding tokens etc
         cut_pred = self.MD.locate_token('finish', pred)
         pred = pred[cut_src_mem:cut_pred]
         
@@ -187,7 +191,8 @@ class Examiner:
             tot_len = sum([len(x) for x in data[index]])
             tot_len -= len(data[index][1]) # Subtract target
             if self.mem_slots:
-                tot_len -= len(data[index][2])
+                tot_len -= len(data[index][2]) # Subtract previous prediction 
+                tot_len -= len(data[index][3]) # Subtract status line
             sorted_data.append([index, tot_len])
         
         sorted_data = sorted(sorted_data, key=lambda x: x[1])
