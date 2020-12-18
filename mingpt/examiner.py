@@ -20,7 +20,7 @@ class Examiner:
         
         # Batch settings
         self.batch_size = 1
-        self.max_batch_size = 256
+        self.max_batch_size = 358
         
     
     def exam(self, fname, dataset, trainer, testing=-1):
@@ -116,7 +116,7 @@ class Examiner:
         trg = x[cut_src_mem:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
-        pred = pred[pred > 3] # Filter out padding tokens etc
+        #pred = pred[pred > 3] # Filter out padding tokens etc
         cut_pred = self.MD.locate_token('finish', pred)
         pred = pred[cut_src_mem:cut_pred]
         

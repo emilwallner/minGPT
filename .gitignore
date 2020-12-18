@@ -4,3 +4,4 @@ __pycache__/
 run
 model.pth
 models
+*.pth
