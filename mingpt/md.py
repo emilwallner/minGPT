@@ -17,7 +17,7 @@ class MemData:
         self.max_src = 0
         self.max_trg = 0
         self.data_lines = 4
-        self.debug = 0
+        self.debug = 10000
         self.split = 0.1
         self.block_size = 0
         self.t = {k: v for v, k in enumerate(self.vocab)} # Character to ID

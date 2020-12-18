@@ -113,7 +113,6 @@ class AdaptiveExaminer:
         
         # Make prediction
         output = sample(self.trainer.model, pred, int(self.max_trg+1))
-        
         return output
     
     def get_input_len(self, x):
@@ -135,7 +134,12 @@ class AdaptiveExaminer:
         
         # Extract prediction from data
         cut_pred = self.MD.locate_token('finish', pred)
-        mark = self.MD.idx[pred[cut_pred+1].tolist()]
+        if cut_pred: 
+            cut_pred = min(self.max_trg, cut_pred)
+            mark = self.MD.idx[pred[cut_pred+1].tolist()]
+        else: 
+            mark = 'error'
+            cut_pred = self.max_trg
         pred = pred[cut_input:cut_pred]
         
         # Translate the tensors to strings
@@ -168,10 +172,11 @@ class AdaptiveExaminer:
     def log_result(self, output):
         
         # Output = [src] + [trg] + [pred] + [mark] + mem
-        correct_p = output[3] == 'right'
         correct_r = 1 if output[1] == output[2] else 0
+        correct_p = output[3] == 'right'
         correct_pr = int(correct_p and correct_r)
-        prediction_score = int(correct_p == correct_r)
+        valid = output[3] == 'right' or output[3] == 'wrong'
+        prediction_score = int(correct_p == correct_r and valid)
         self.tmp_r.append(correct_pr)
         self.tmp_p.append(prediction_score)
         
@@ -181,7 +186,7 @@ class AdaptiveExaminer:
             self.results.append(correct_pr)
         elif correct_p != correct_r:
             output[3] = f"Predicted: {correct_p}, Result: {correct_r}"
-            if not self.train: self.train_buffer.append(output)
+            if not self.test: self.train_buffer.append(output)
             self.results.append(correct_pr)
         else:
             if self.iter == self.ac - 1: self.results.append(correct_pr)
@@ -191,11 +196,12 @@ class AdaptiveExaminer:
     def save_result_to_file(self):
         
         r, p = self.tmp_r, self.tmp_p
-        print("It%d: %d/%d = %.2f%% correct" % (current_it, np.sum(r), len(r), 100*np.mean(r)))
+        print("Adaptive Compute Iteration: ", self.iter)
+        print("Result: %d/%d = %.2f%% correct" % (np.sum(r), len(r), 100*np.mean(r)))
         print("Predictions: %d/%d = %.2f%% correct" % (np.sum(p), len(p), 100*np.mean(p)))
-        if not self.test: self.write_file(self, self.train_fn, self.train_buffer)
-        self.write_file(self, self.tmp_fn, self.tmp_buffer)
-        self.write_file(self, self.correct_fn, self.correct_buffer)
+        if not self.test: self.write_file(self.train_fn, self.train_buffer)
+        self.write_file(self.tmp_fn, self.tmp_buffer)
+        self.write_file(self.correct_fn, self.correct_buffer)
         
     def write_file(self, fname, buffer):
         
