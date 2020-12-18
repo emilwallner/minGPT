@@ -28,33 +28,35 @@ class AdaptiveExaminer:
     
     def exam(self, fname, trainer, test=False, debug=0):
         
-        self.create_filenames()
         self.test = test
         self.debug = debug
         self.fname = fname
         self.trainer = trainer
+        self.create_filenames()
         self.initiate_at_start()
         
         for i in range(self.ac):
-            self.one_loop(i)
+            self.iter = i
+            self.one_loop()
             
         self.write_file(self, self.train_fn, self.tmp_buffer)
         
         if os.path.exists(self.tmp_fn):
             os.remove(self.tmp_fn)
+        if self.test:
+            if os.path.exists(self.correct_fn):
+                os.remove(self.correct_fn)
         
-        results = self.results
-        preds = self.predictions
-        print("Final score: %d/%d = %.2f%% correct" % (np.sum(results), len(results), 100*np.mean(results)))
-        print("Final predictions: %d/%d = %.2f%% correct" % (np.sum(preds), len(preds), 100*np.mean(preds)))
+        r = self.results
+        print("Final score: %d/%d = %.2f%% correct" % (np.sum(r), len(r), 100*np.mean(r)))
         
-    def one_loop(self, current_it):
+    def one_loop(self):
         
         self.initiate_vars()
-        fname == self.train_fn if current_it == 0 else self.tmp_fn
+        fname = self.train_fn if self.iter == 0 else self.tmp_fn
         dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0)
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
-        if current_it == 0: self.initiate_at_start()
+        if self.iter == 0: self.initiate_at_start()
         
         dataset_len = len(loader)
         pbar = tqdm(enumerate(loader), total=dataset_len)
@@ -72,10 +74,10 @@ class AdaptiveExaminer:
                 
                 for i in range(batch_sz):
                     clean_output = self.clean_output(batch[i], output[i], cut_input)
-                    self.log_results(clean_output)
+                    self.log_result(clean_output)
                 
                 # Log status
-                pbar.set_description(f"Iiter {b} Score: {np.sum(self.results)}/{len(self.results)}")
+                pbar.set_description(f"Iiter {b} Score: {np.sum(self.tmp_r)}/{len(self.tmp_r)}")
             
             if self.debug and b+1 >= self.debug:
                 break
@@ -163,29 +165,35 @@ class AdaptiveExaminer:
         return mem
 
             
-    def log_results(self, output):
+    def log_result(self, output):
         
         # Output = [src] + [trg] + [pred] + [mark] + mem
         correct_p = output[3] == 'right'
         correct_r = 1 if output[1] == output[2] else 0
         correct_pr = int(correct_p and correct_r)
         prediction_score = int(correct_p == correct_r)
-        # TODO: Seperate local and global results
-        self.results.append(correct_pr)
-        self.predictions.append(prediction_score)
+        self.tmp_r.append(correct_pr)
+        self.tmp_p.append(prediction_score)
         
         # Create training data
         if correct_pr:
             self.correct_buffer.append(output)
-        elif (correct_p and not correct_r) or (not correct_p and correct_r):
+            self.results.append(correct_pr)
+        elif correct_p != correct_r:
             output[3] = f"Predicted: {correct_p}, Result: {correct_r}"
-            self.train_buffer.append(output)
+            if not self.train: self.train_buffer.append(output)
+            self.results.append(correct_pr)
         else:
-            self.temp_buffer.append(output)
+            if self.iter == self.ac - 1: self.results.append(correct_pr)
+            self.tmp_buffer.append(output)
 
+    
     def save_result_to_file(self):
         
-        self.write_file(self, self.train_fn, self.train_buffer)
+        r, p = self.tmp_r, self.tmp_p
+        print("It%d: %d/%d = %.2f%% correct" % (current_it, np.sum(r), len(r), 100*np.mean(r)))
+        print("Predictions: %d/%d = %.2f%% correct" % (np.sum(p), len(p), 100*np.mean(p)))
+        if not self.test: self.write_file(self, self.train_fn, self.train_buffer)
         self.write_file(self, self.tmp_fn, self.tmp_buffer)
         self.write_file(self, self.correct_fn, self.correct_buffer)
         
@@ -216,13 +224,14 @@ class AdaptiveExaminer:
         head_tail = os.path.split(self.fname)
         self.train_fn = head_tail[0] + '/' + head_tail[1]
         self.correct_fn = head_tail[0] + '/correct_' + head_tail[1]
-        self.temp_fn = head_tail[0] + '/temp_' + head_tail[1]
+        self.tmp_fn = head_tail[0] + '/tmp_' + head_tail[1]
     
     def initiate_vars(self):
         self.tmp_buffer, self.train_buffer, self.correct_buffer = [], [], []
         self.len, self.predict, self.batch, self.buffer = 0, 0, 0, False
+        self.tmp_r, self.tmp_p = [], []
         
     def initiate_at_start(self):
-        self.results, self.predictions = [], []
-        if os.path.exists(train_fname):
-            os.remove(train_fname)
+        self.results = []
+        if os.path.exists(self.train_fn) and not self.test:
+            os.remove(self.train_fn)
