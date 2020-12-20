@@ -22,7 +22,6 @@ class AdaptiveExaminer:
         self.ac = ac
         
         # Batch settings
-        self.batch_size = 1
         self.data_lines = 4
      
     
@@ -33,13 +32,12 @@ class AdaptiveExaminer:
         self.fname = fname
         self.trainer = trainer
         self.create_filenames()
-        self.initiate_at_start()
         
         for i in range(self.ac):
             self.iter = i
             self.one_loop()
             
-        self.write_file(self, self.train_fn, self.tmp_buffer)
+        if not self.test: self.write_file(self.train_fn, self.tmp_buffer)
         
         if os.path.exists(self.tmp_fn):
             os.remove(self.tmp_fn)
@@ -55,13 +53,13 @@ class AdaptiveExaminer:
         self.initiate_vars()
         fname = self.train_fn if self.iter == 0 else self.tmp_fn
         dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0)
-        loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
+        loader = DataLoader(dataset, batch_size=1, shuffle=False)
         if self.iter == 0: self.initiate_at_start()
         
         dataset_len = len(loader)
+        print(dataset_len)
         pbar = tqdm(enumerate(loader), total=dataset_len)
         batch = []
-        
         for b, (x, y) in pbar:
             
             batch = self.concatenate_batches(batch, x)
@@ -69,14 +67,17 @@ class AdaptiveExaminer:
         
             if self.predict:
                 output = self.model_predict(batch)
-                cut_input = self.get_input_len(batch[0]) + 1
+                cut_input = self.get_input_len(batch[0])
                 batch_sz = batch.size(0)
                 
                 for i in range(batch_sz):
+                    if self.get_input_len(batch[i]) != cut_input:
+                        print("fuck up")
                     clean_output = self.clean_output(batch[i], output[i], cut_input)
                     self.log_result(clean_output)
                 
                 # Log status
+                batch = []
                 pbar.set_description(f"Iiter {b} Score: {np.sum(self.tmp_r)}/{len(self.tmp_r)}")
             
             if self.debug and b+1 >= self.debug:
@@ -87,22 +88,21 @@ class AdaptiveExaminer:
 
     def concatenate_batches(self, batch, x):
         
-        new_len = self.get_input_len(x[0])
-        
         # Start a new batch for the first iteration
-        if batch == []: batch = x
-        # Handle input that could not fit into a batch
-        elif self.leftover != []:
+        empty = self.leftover == [] and batch == []
+        if empty: batch = x
+        elif batch == []:
             batch = self.leftover
             self.leftover = []
        
         # Concat input source with same length
-        if self.len == new_len: batch = torch.cat((batch, x), 0)
-        else: self.predict, self.leftover = 1, x
-   
-        self.len = new_len
-        self.batches += 1
+        new_len = self.get_input_len(x[0])
+        old_len = self.get_input_len(batch[0]) if batch != [] else 0
         
+        if old_len == new_len and not empty: batch = torch.cat((batch, x), 0)
+        elif not empty: self.predict, self.leftover = 1, x #No predict for the very first batch
+   
+        self.batches += 1     
         if self.batches == self.max_batch_size: self.predict = 1
         
         return batch
@@ -113,7 +113,7 @@ class AdaptiveExaminer:
         self.predict, self.batches  = 0, 0
         
         # Prepare input
-        cut_index = self.get_input_len(x_in[0]) + 1 
+        cut_index = self.get_input_len(x_in[0]) 
         x_cut = x_in[:, :cut_index]
         pred = x_cut.to(self.trainer.device)
         
@@ -126,7 +126,7 @@ class AdaptiveExaminer:
         if self.mem_slots: cut_input = self.MD.locate_token('mem-end', x)
         else: cut_input = self.MD.locate_token('answer', x) 
         
-        return cut_input
+        return cut_input + 1
     
     def clean_output(self, x, pred, cut_input):
         
@@ -135,18 +135,19 @@ class AdaptiveExaminer:
         src =  x[:cut_src]
         
         # Extract trg from data
+        cut_input_2 = self.get_input_len(x)
         cut_padding = self.MD.locate_token('pad', x)
-        cut_input_2 = self.get_input_len(x) + 1
         trg = x[cut_input:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
+        pred_raw = pred
         cut_pred = self.MD.locate_token('finish', pred)
         if cut_pred: 
             cut_pred = min(self.max_trg+1, cut_pred)
             mark = self.MD.idx[pred[cut_pred+1].tolist()]
         else: 
             mark = 'error'
-            cut_pred = self.max_trg
+            cut_pred = -1
         pred = pred[cut_input:cut_pred]
         pred = pred[pred > 3] # Filter tokens below 4
         
@@ -161,11 +162,14 @@ class AdaptiveExaminer:
             mem = self.tensor2memory(x[cut_src+1:], pred)
         
         #Debug
-        self.get_input_len
+
         
-        if "mem" in trg:
+
+        if 'mem' in trg:
+            print("!!!!\n\n\n\n\n")
             print(f"X: {self.MD.tensor2string(x)}\n")
-            print(f"Org input: {cut_input}\n New input: {cut_input_2}\n")
+            print(f"pred: {self.MD.tensor2string(pred_raw)}\n")
+            print(f"Org input: {cut_input}\nNew input: {cut_input_2}\n")
             print(f"Src: {src}\nTrg: {trg}\nPred: {pred}\nMark:{mark}\nMem: {mem}\n")
         
         return [src] + [trg] + [pred] + [mark] + mem
@@ -210,12 +214,12 @@ class AdaptiveExaminer:
 
     
     def save_result_to_file(self):
-        
         r, p = self.tmp_r, self.tmp_p
         print("Adaptive Compute Iteration: ", self.iter)
         print("Result: %d/%d = %.2f%% correct" % (np.sum(r), len(r), 100*np.mean(r)))
         print("Predictions: %d/%d = %.2f%% correct" % (np.sum(p), len(p), 100*np.mean(p)))
-        if not self.test: self.write_file(self.train_fn, self.train_buffer)
+        if os.path.exists(self.tmp_fn):
+            os.remove(self.tmp_fn)
         self.write_file(self.tmp_fn, self.tmp_buffer)
         self.write_file(self.correct_fn, self.correct_buffer)
         

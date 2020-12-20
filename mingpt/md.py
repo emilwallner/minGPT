@@ -9,7 +9,7 @@ from torch.nn import functional as F
 class MemData:
     """ Clean data, tokenizer, helper functions """
 
-    def __init__(self, mem_slots):
+    def __init__(self, mem_slots, debug=0):
         self.mem_slots = mem_slots
         self.vocab = ['pad', 'answer', 'mem', 'mem-end', 'finish', 'right', 'wrong'] + list(' ' + string.punctuation + string.digits + string.ascii_uppercase + string.ascii_lowercase)
         self.vocab_size = len(self.vocab) 
@@ -17,7 +17,7 @@ class MemData:
         self.max_src = 0
         self.max_trg = 0
         self.data_lines = 4
-        self.debug = 10000
+        self.debug = debug
         self.split = 0.1
         self.block_size = 0
         self.t = {k: v for v, k in enumerate(self.vocab)} # Character to ID
@@ -76,10 +76,11 @@ class MemData:
         if not self.max_src:
             self.max_src = len(max(dataset[0], key=len)) + 1# +1 for ending token
             self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
+            # Src tokens + answer, target tokens, memory tokens, and corresponding end tokens
+            # An extra for right/wrong token, and one for end of memory, and finish token
+            self.block_size = self.max_src + 1 + (self.max_trg * (self.mem_slots + 1)) + 3 
 
-        # Src tokens, target tokens, memory tokens, and corresponding end tokens
-        # An extra for right/wrong token, and one for end of memory
-        self.block_size = self.max_src + (self.max_trg * (self.mem_slots + 1)) + 2 
+       
         return dataset
     
     def sort_data_by_len(self, indexes, data):
