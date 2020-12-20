@@ -141,8 +141,11 @@ class AdaptiveExaminer:
         pred_raw = pred
         cut_pred = self.MD.locate_token('finish', pred)
         if cut_pred: 
-            cut_pred = min(self.max_trg+1, cut_pred)
-            mark = self.MD.idx[pred[cut_pred+1].tolist()]
+            #cut_pred = min(self.max_trg, cut_pred)
+            try:
+                mark = self.MD.idx[pred[cut_pred+1].tolist()]
+            except:
+                mark = "error"
         else: 
             mark = 'error'
             cut_pred = -1
