@@ -87,24 +87,30 @@ class AdaptiveExaminer:
 
     def concatenate_batches(self, batch, x):
         
-        new_len = self.get_input_len(x[0]) 
-        batch = self.leftover if self.buffer == True else batch
-
+        new_len = self.get_input_len(x[0])
+        
+        # Start a new batch for the first iteration
+        if batch == []: batch = x
+        # Handle input that could not fit into a batch
+        elif self.leftover != []:
+            batch = self.leftover
+            self.leftover = []
+       
         # Concat input source with same length
         if self.len == new_len: batch = torch.cat((batch, x), 0)
-        elif self.buffer == False: batch = x
         else: self.predict, self.leftover = 1, x
    
         self.len = new_len
-        self.batch_size += 1
-        if self.batch_size == self.max_batch_size: self.predict = 1
+        self.batches += 1
+        
+        if self.batches == self.max_batch_size: self.predict = 1
         
         return batch
         
     def model_predict(self, x_in):
         
         # Reset tracker variables
-        self.batch, self.predict, self.len, self.buffer = 0, 0, 0, False
+        self.predict, self.batches  = 0, 0
         
         # Prepare input
         cut_index = self.get_input_len(x_in[0]) + 1 
@@ -117,10 +123,10 @@ class AdaptiveExaminer:
     
     def get_input_len(self, x):
         
-        if self.mem_slots: clip_src_mem = self.MD.locate_token('mem-end', x)
-        else: clip_src_mem = self.MD.locate_token('answer', x) 
+        if self.mem_slots: cut_input = self.MD.locate_token('mem-end', x)
+        else: cut_input = self.MD.locate_token('answer', x) 
         
-        return clip_src_mem
+        return cut_input
     
     def clean_output(self, x, pred, cut_input):
         
@@ -130,17 +136,19 @@ class AdaptiveExaminer:
         
         # Extract trg from data
         cut_padding = self.MD.locate_token('pad', x)
+        cut_input_2 = self.get_input_len(x) + 1
         trg = x[cut_input:cut_padding] # X does not have the 'finish' token
         
         # Extract prediction from data
         cut_pred = self.MD.locate_token('finish', pred)
         if cut_pred: 
-            cut_pred = min(self.max_trg, cut_pred)
+            cut_pred = min(self.max_trg+1, cut_pred)
             mark = self.MD.idx[pred[cut_pred+1].tolist()]
         else: 
             mark = 'error'
             cut_pred = self.max_trg
         pred = pred[cut_input:cut_pred]
+        pred = pred[pred > 3] # Filter tokens below 4
         
         # Translate the tensors to strings
         src = self.MD.tensor2string(src)
@@ -151,6 +159,14 @@ class AdaptiveExaminer:
         mem = []
         if self.mem_slots:
             mem = self.tensor2memory(x[cut_src+1:], pred)
+        
+        #Debug
+        self.get_input_len
+        
+        if "mem" in trg:
+            print(f"X: {self.MD.tensor2string(x)}\n")
+            print(f"Org input: {cut_input}\n New input: {cut_input_2}\n")
+            print(f"Src: {src}\nTrg: {trg}\nPred: {pred}\nMark:{mark}\nMem: {mem}\n")
         
         return [src] + [trg] + [pred] + [mark] + mem
     
@@ -208,8 +224,9 @@ class AdaptiveExaminer:
         with open(fname, "a") as file:
             indexes = self.sort_data_len(buffer)
             for index in indexes:
-                for item in buffer[index]:
-                    file.write(item + '\n')
+                for idx, item in enumerate(buffer[index]):
+                    if idx == 0: file.write(item[:self.MD.max_src] + '\n')
+                    else: file.write(item[:self.MD.max_trg] + '\n')
         
         
     def sort_data_len(self, data):
@@ -234,7 +251,7 @@ class AdaptiveExaminer:
     
     def initiate_vars(self):
         self.tmp_buffer, self.train_buffer, self.correct_buffer = [], [], []
-        self.len, self.predict, self.batch, self.buffer = 0, 0, 0, False
+        self.len, self.predict, self.batches, self.leftover = 0, 0, 0, []
         self.tmp_r, self.tmp_p = [], []
         
     def initiate_at_start(self):

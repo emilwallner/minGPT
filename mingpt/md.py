@@ -153,3 +153,6 @@ class MemData:
 
     def locate_token(self, token, tensor):
         return None if self.t[token] not in tensor.tolist() else tensor.tolist().index(self.t[token])
+    
+    def locate_token_last(self, token, tensor):
+        return None if self.t[token] not in tensor.tolist() else tensor.tolist().rindex(self.t[token])
