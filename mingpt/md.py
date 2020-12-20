@@ -78,7 +78,7 @@ class MemData:
             self.max_trg = len(max(dataset[1], key=len)) + 1 # +1 for ending token
             # Src tokens + answer, target tokens, memory tokens, and corresponding end tokens
             # An extra for right/wrong token, and one for end of memory, and finish token
-            self.block_size = self.max_src + 1 + (self.max_trg * (self.mem_slots + 1)) + 3 
+            self.block_size = self.max_src + 1 + (self.max_trg * (self.mem_slots + 1)) + 4 
 
        
         return dataset

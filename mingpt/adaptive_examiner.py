@@ -71,8 +71,6 @@ class AdaptiveExaminer:
                 batch_sz = batch.size(0)
                 
                 for i in range(batch_sz):
-                    if self.get_input_len(batch[i]) != cut_input:
-                        print("fuck up")
                     clean_output = self.clean_output(batch[i], output[i], cut_input)
                     self.log_result(clean_output)
                 
