@@ -11,6 +11,7 @@ class MemData:
 
     def __init__(self, mem_slots, debug=0):
         self.mem_slots = mem_slots
+        self.dataset_len = 0
         self.vocab = ['pad', 'answer', 'mem', 'mem-end', 'finish', 'right', 'wrong'] + list(' ' + string.punctuation + string.digits + string.ascii_uppercase + string.ascii_lowercase)
         self.vocab_size = len(self.vocab) 
         # Max input characters plus max answer characters, 160 + 32 in original dataset
@@ -24,7 +25,7 @@ class MemData:
         self.idx = {v: k for k, v in self.t.items()} # ID to Character
         self.idx[-100] = ''
     
-    def initiate_mem_slot_data(self, fname):
+    def initiate_mem_slot_data(self, fname, warmup_sz=-1):
         # split up all addition problems into either training data or test data    
         head_tail = os.path.split(fname) 
         src, trg = [], []
@@ -36,6 +37,7 @@ class MemData:
         
         data_len = len(src)
         if self.debug: data_len = self.debug
+        self.dataset_len = data_len * (1-self.split)
         r = np.random.RandomState(1337) # make deterministic
         perm = r.permutation(data_len) # Create random indexes
         num_test = int(data_len*self.split) # 10% of the whole dataset
@@ -46,9 +48,11 @@ class MemData:
         os.remove(fname)
         test_fname = head_tail[0] + '/test_' + head_tail[1]
         train_fname = head_tail[0] + '/train_' + head_tail[1]
+        org_fname = head_tail[0] + '/org_' + head_tail[1]
         
         self.create_new_file(test_fname, src, trg, test_indexes)
-        self.create_new_file(train_fname, src, trg, train_indexes)
+        self.create_new_file(train_fname, src, trg, train_indexes[:warmup_sz])
+        self.create_new_file(org_fname, src, trg, train_indexes)
     
     def create_new_file(self, fname, src, trg, indexes):
         with open(fname, "a") as file:

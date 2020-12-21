@@ -14,13 +14,14 @@ class MathDataset(Dataset):
     
     """
 
-    def __init__(self, fname, MD, marker_data=0.2):
+    def __init__(self, fname, MD, marker_data=0.2, size=-1):
         self.MD = MD
         self.mem_slots = MD.mem_slots
         self.marker_data = marker_data
         self.data_lines = 4
         self.dataset = self.MD.prepare_data(fname) # Extract data, source, memory, and target        
         self.ixes = np.array(list(range(len(self.dataset[0])))) 
+        self.ixes = self.ixes[:size]
         
     def __len__(self):
         return self.ixes.size

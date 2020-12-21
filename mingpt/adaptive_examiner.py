@@ -13,22 +13,24 @@ import random, string
 class AdaptiveExaminer:
     """ Clean data, tokenizer, helper functions """
 
-    def __init__(self, MD, ac=10, max_batch=358):
+    def __init__(self, MD, ac=10, max_batch=358, warmup=False):
         # MemData, Trainer, and Dataset classes
         self.mem_slots = MD.mem_slots
         self.max_trg = MD.max_trg
         self.MD = MD
         self.max_batch_size = max_batch
         self.ac = ac
+        self.warmup = warmup
         
         # Batch settings
         self.data_lines = 4
      
     
-    def exam(self, fname, trainer, test=False, debug=0):
+    def exam(self, fname, trainer, size, test=False, debug=0):
         
         self.test = test
         self.debug = debug
+        self.size = size
         self.fname = fname
         self.trainer = trainer
         self.create_filenames()
@@ -52,7 +54,8 @@ class AdaptiveExaminer:
         
         self.initiate_vars()
         fname = self.train_fn if self.iter == 0 else self.tmp_fn
-        dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0)
+        if self.iter == 0 and not self.warmup: fname = self.org_fn
+        dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0, size=self.size)
         loader = DataLoader(dataset, batch_size=1, shuffle=False)
         if self.iter == 0: self.initiate_at_start()
         
@@ -163,15 +166,12 @@ class AdaptiveExaminer:
             mem = self.tensor2memory(x[cut_src+1:], pred)
         
         #Debug
-
         
-
-        if 'mem' in trg:
-            print("!!!!\n\n\n\n\n")
-            print(f"X: {self.MD.tensor2string(x)}\n")
-            print(f"pred: {self.MD.tensor2string(pred_raw)}\n")
-            print(f"Org input: {cut_input}\nNew input: {cut_input_2}\n")
-            print(f"Src: {src}\nTrg: {trg}\nPred: {pred}\nMark:{mark}\nMem: {mem}\n")
+#         print("!!!!\n\n\n\n\n")
+#         print(f"X: {self.MD.tensor2string(x)}\n")
+#         print(f"pred: {self.MD.tensor2string(pred_raw)}\n")
+#         print(f"Org input: {cut_input}\nNew input: {cut_input_2}\n")
+#         print(f"Src: {src}\nTrg: {trg}\nPred: {pred}\nMark:{mark}\nMem: {mem}\n")
         
         return [src] + [trg] + [pred] + [mark] + mem
     
@@ -221,6 +221,7 @@ class AdaptiveExaminer:
         print("Predictions: %d/%d = %.2f%% correct" % (np.sum(p), len(p), 100*np.mean(p)))
         if os.path.exists(self.tmp_fn):
             os.remove(self.tmp_fn)
+        self.write_file(self.train_fn, self.train_buffer)
         self.write_file(self.tmp_fn, self.tmp_buffer)
         self.write_file(self.correct_fn, self.correct_buffer)
         
@@ -253,6 +254,7 @@ class AdaptiveExaminer:
         self.train_fn = head_tail[0] + '/' + head_tail[1]
         self.correct_fn = head_tail[0] + '/correct_' + head_tail[1]
         self.tmp_fn = head_tail[0] + '/tmp_' + head_tail[1]
+        self.org_fn = head_tail[0] + '/org_' + head_tail[1]
     
     def initiate_vars(self):
         self.tmp_buffer, self.train_buffer, self.correct_buffer = [], [], []
