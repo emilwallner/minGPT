@@ -54,9 +54,7 @@ class AdaptiveExaminer:
         
         self.initiate_vars()
         fname = self.train_fn if self.iter == 0 else self.tmp_fn
-        if self.iter == 0 and not self.warmup: fname = self.org_fn
-        print(self.size)
-        print(type(self.size))
+        if self.iter == 0 and not self.warmup and not self.test: fname = self.org_fn
         dataset = MathDataset(fname=fname, MD=self.MD, marker_data=0.0, size=self.size)
         loader = DataLoader(dataset, batch_size=1, shuffle=False)
         if self.iter == 0: self.initiate_at_start()
