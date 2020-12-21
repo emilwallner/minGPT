@@ -24,14 +24,15 @@ class AcSchedule:
         current_it += 1
         
         if current_it <= self.mem_slots:
-            epoch = 1
+            epoch = 5
             size = self.init_sz
             ac = 1
             warmup = True
         else:
             size = self.init_sz * (self.scale_sz**(current_it - self.mem_slots))
-            if size < self.len:epoch = 1
-            else: epoch = math.ceil(size/self.len)
+            epoch = 10
+            #if size < self.len:epoch = 5
+            #else: epoch = max(math.ceil(size/self.len), 5)
             size = min(size, self.len)
             ac = ((current_it - self.mem_slots) * 3) + 7
             warmup = False

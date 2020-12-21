@@ -106,7 +106,6 @@ model = GPT(mconf)
 max_it = 100
 current_it = 0
 batch_size = 384
-marker_data = 0.2
 
 exp_folder = 'models/' + datetime.datetime.now().strftime('%Y-%m-%d~%H:%M:%S')
 schedule = AcSchedule(MD)

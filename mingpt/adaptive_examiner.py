@@ -201,7 +201,8 @@ class AdaptiveExaminer:
         self.tmp_p.append(prediction_score)
         
         # Create training data
-        if correct_pr:
+        if correct_r:
+            output[3] = "True, but wrong prediction" if not correct_pr else output[3]
             self.correct_buffer.append(output)
             self.results.append(correct_pr)
         elif correct_p != correct_r:
