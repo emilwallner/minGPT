@@ -37,7 +37,7 @@ class AcSchedule:
             ac = ((current_it - self.mem_slots) * 3) + 7
             warmup = False
         
-        marker_data = 0.0 if current_it == 0 else self.marker_data
+        marker_data = 0.0 if current_it == 1 else self.marker_data
         
         return epoch, int(size), ac, marker_data, warmup
                 

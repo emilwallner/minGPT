@@ -1,3 +1,4 @@
+12/21/2020 15:13:52 - INFO - mingpt.model -   number of parameters: 3.277568e+06
 257
 102
 27
@@ -5,206 +6,8 @@ Training Iteration: 0
 
 Epochs: 5
 Size: 50000
-Marker: 0.2
+Marker: 0.0
 Warm: True
 AC: 1
 
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 1/50000 = 0.00% correct
-Predictions: 1/50000 = 0.00% correct
-Final score: 1/50000 = 0.00% correct
-
-
-
-Training Iteration: 1
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 0/49999 = 0.00% correct
-Predictions: 1051/49999 = 2.10% correct
-Final score: 0/49999 = 0.00% correct
-
-
-
-Training Iteration: 2
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 1/49999 = 0.00% correct
-Predictions: 5136/49999 = 10.27% correct
-Final score: 1/49999 = 0.00% correct
-
-
-
-Training Iteration: 3
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 5/49998 = 0.01% correct
-Predictions: 31592/49998 = 63.19% correct
-Final score: 5/49998 = 0.01% correct
-
-
-
-Training Iteration: 4
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 15/49993 = 0.03% correct
-Predictions: 49013/49993 = 98.04% correct
-Final score: 15/49993 = 0.03% correct
-
-
-
-Training Iteration: 5
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 80/49977 = 0.16% correct
-Predictions: 48986/49977 = 98.02% correct
-Final score: 80/49977 = 0.16% correct
-
-
-
-Training Iteration: 6
-
-Epochs: 5
-Size: 50000
-Marker: 0.2
-Warm: True
-AC: 1
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 29/49897 = 0.06% correct
-Predictions: 49094/49897 = 98.39% correct
-Final score: 29/49897 = 0.06% correct
-
-
-
-Training Iteration: 7
-
-Epochs: 10
-Size: 60000
-Marker: 0.2
-Warm: False
-AC: 10
-
-Training exam 
-
-Adaptive Compute Iteration:  0
-Result: 0/60000 = 0.00% correct
-Predictions: 160/60000 = 0.27% correct
-Adaptive Compute Iteration:  1
-Result: 0/59105 = 0.00% correct
-Predictions: 2247/59105 = 3.80% correct
-Adaptive Compute Iteration:  2
-Result: 30/42369 = 0.07% correct
-Predictions: 34711/42369 = 81.93% correct
-Adaptive Compute Iteration:  3
-Result: 8/34845 = 0.02% correct
-Predictions: 28229/34845 = 81.01% correct
-Adaptive Compute Iteration:  4
-Result: 1/28396 = 0.00% correct
-Predictions: 20967/28396 = 73.84% correct
-Adaptive Compute Iteration:  5
-Result: 2/21113 = 0.01% correct
-Predictions: 18918/21113 = 89.60% correct
-Adaptive Compute Iteration:  6
-Result: 1/19064 = 0.01% correct
-Predictions: 18274/19064 = 95.86% correct
-Adaptive Compute Iteration:  7
-Result: 0/18420 = 0.00% correct
-Predictions: 18016/18420 = 97.81% correct
-Adaptive Compute Iteration:  8
-Result: 0/18163 = 0.00% correct
-Predictions: 17916/18163 = 98.64% correct
-Adaptive Compute Iteration:  9
-Result: 0/18063 = 0.00% correct
-Predictions: 17896/18063 = 99.08% correct
-Final score: 42/59999 = 0.07% correct
-
-
-
-Test exam 
-
-Adaptive Compute Iteration:  0
-Result: 0/60000 = 0.00% correct
-Predictions: 57/60000 = 0.10% correct
-Adaptive Compute Iteration:  1
-Result: 0/53577 = 0.00% correct
-Predictions: 1387/53577 = 2.59% correct
-Adaptive Compute Iteration:  2
-Result: 1/46451 = 0.00% correct
-Predictions: 36159/46451 = 77.84% correct
-Adaptive Compute Iteration:  3
-Result: 1/36196 = 0.00% correct
-Predictions: 31617/36196 = 87.35% correct
-Adaptive Compute Iteration:  4
-Result: 0/31732 = 0.00% correct
-Predictions: 27217/31732 = 85.77% correct
-Adaptive Compute Iteration:  5
-Result: 1/27245 = 0.00% correct
-Predictions: 25726/27245 = 94.42% correct
-Adaptive Compute Iteration:  6
-Result: 0/25792 = 0.00% correct
-Predictions: 25232/25792 = 97.83% correct
-Adaptive Compute Iteration:  7
-Result: 0/25276 = 0.00% correct
-Predictions: 25082/25276 = 99.23% correct
-Adaptive Compute Iteration:  8
-Result: 0/25122 = 0.00% correct
-Predictions: 25036/25122 = 99.66% correct
-Adaptive Compute Iteration:  9
-Result: 0/25076 = 0.00% correct
-Predictions: 25022/25076 = 99.78% correct
-Final score: 3/59996 = 0.01% correct
-
-
-
-Training Iteration: 8
-
-Epochs: 10
-Size: 72000
-Marker: 0.2
-Warm: False
-AC: 13
-
+  0%|                                                                                                                                                   | 0/131 [00:00<?, ?it/s]epoch 1 iter 0: train loss 4.67371. lr 5.999999e-04:   0%|                                                                                              | 0/131 [00:00<?, ?it/s]epoch 1 iter 0: train loss 4.67371. lr 5.999999e-04:   1%|▋                                                                                     | 1/131 [00:00<01:34,  1.38it/s]epoch 1 iter 1: train loss 3.73590. lr 5.999997e-04:   1%|▋                                                                                     | 1/131 [00:01<01:34,  1.38it/s]epoch 1 iter 1: train loss 3.73590. lr 5.999997e-04:   2%|█▎                                                                                    | 2/131 [00:01<01:23,  1.55it/s]epoch 1 iter 2: train loss 3.29640. lr 5.999993e-04:   2%|█▎                                                                                    | 2/131 [00:01<01:23,  1.55it/s]epoch 1 iter 2: train loss 3.29640. lr 5.999993e-04:   2%|█▉                                                                                    | 3/131 [00:01<01:15,  1.69it/s]epoch 1 iter 3: train loss 3.09613. lr 5.999986e-04:   2%|█▉                                                                                    | 3/131 [00:02<01:15,  1.69it/s]epoch 1 iter 3: train loss 3.09613. lr 5.999986e-04:   3%|██▋                                                                                   | 4/131 [00:02<01:10,  1.81it/s]epoch 1 iter 4: train loss 2.81422. lr 5.999978e-04:   3%|██▋                                                                                   | 4/131 [00:02<01:10,  1.81it/s]epoch 1 iter 4: train loss 2.81422. lr 5.999978e-04:   4%|███▎                                                                                  | 5/131 [00:02<01:06,  1.89it/s]epoch 1 iter 5: train loss 2.59574. lr 5.999968e-04:   4%|███▎                                                                                  | 5/131 [00:03<01:06,  1.89it/s]epoch 1 iter 5: train loss 2.59574. lr 5.999968e-04:   5%|███▉                                                                                  | 6/131 [00:03<01:03,  1.96it/s]epoch 1 iter 6: train loss 2.43687. lr 5.999957e-04:   5%|███▉                                                                                  | 6/131 [00:03<01:03,  1.96it/s]epoch 1 iter 6: train loss 2.43687. lr 5.999957e-04:   5%|████▌                                                                                 | 7/131 [00:03<01:01,  2.02it/s]epoch 1 iter 7: train loss 2.33817. lr 5.999943e-04:   5%|████▌                                                                                 | 7/131 [00:03<01:01,  2.02it/s]epoch 1 iter 7: train loss 2.33817. lr 5.999943e-04:   6%|█████▎                                                                                | 8/131 [00:03<00:59,  2.06it/s]epoch 1 iter 8: train loss 2.22629. lr 5.999928e-04:   6%|█████▎                                                                                | 8/131 [00:04<00:59,  2.06it/s]epoch 1 iter 8: train loss 2.22629. lr 5.999928e-04:   7%|█████▉                                                                                | 9/131 [00:04<00:58,  2.09it/s]epoch 1 iter 9: train loss 2.14481. lr 5.999911e-04:   7%|█████▉                                                                                | 9/131 [00:04<00:58,  2.09it/s]epoch 1 iter 9: train loss 2.14481. lr 5.999911e-04:   8%|██████▍                                                                              | 10/131 [00:04<00:57,  2.11it/s]
