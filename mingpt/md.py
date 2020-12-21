@@ -107,7 +107,7 @@ class MemData:
         mem = []
         if self.mem_slots:
             for item in data[self.data_lines:]:
-                memory = list(item) if random.random() < mem_loss else []
+                memory = [] if random.random() < mem_loss else list(item)
                 mem += memory + ['mem']
             mem += ['mem-end']
             
