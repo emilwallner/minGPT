@@ -38,7 +38,7 @@ class AcSchedule:
         
         marker_data = 0.0 if current_it == 0 else self.marker_data
         
-        return epoch, size, ac, marker_data, warmup
+        return epoch, int(size), ac, marker_data, warmup
                 
         
                 
