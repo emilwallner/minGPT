@@ -101,16 +101,25 @@ class MemData:
         test_data_by_length = sorted(test_data_by_length, key=lambda x: x[1])
         return [i[0] for i in test_data_by_length]
     
-    def create_math_data(self, data):
+    def create_math_data(self, data, mem_loss):
         src = list(data[0]) + ['answer'] 
         trg = list(data[1]) + ['finish']
         mem = []
         if self.mem_slots:
             for item in data[self.data_lines:]:
-                mem += list(item) + ['mem']
+                memory = list(item) if random.random() < mem_loss else []
+                mem += memory + ['mem']
             mem += ['mem-end']
             
         return src, mem, trg
+    
+    def empty_mem(self):
+        mem = []
+        if self.mem_slots:
+            for item in data[self.data_lines:]:
+                mem += list(item) + ['mem']
+            mem += ['mem-end']
+        return mem
     
     def create_marker_data(self, data):
         src = list(data[0]) + ['answer']

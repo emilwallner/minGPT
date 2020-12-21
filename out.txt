@@ -128,3 +128,83 @@ Marker: 0.2
 Warm: False
 AC: 10
 
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/60000 = 0.00% correct
+Predictions: 160/60000 = 0.27% correct
+Adaptive Compute Iteration:  1
+Result: 0/59105 = 0.00% correct
+Predictions: 2247/59105 = 3.80% correct
+Adaptive Compute Iteration:  2
+Result: 30/42369 = 0.07% correct
+Predictions: 34711/42369 = 81.93% correct
+Adaptive Compute Iteration:  3
+Result: 8/34845 = 0.02% correct
+Predictions: 28229/34845 = 81.01% correct
+Adaptive Compute Iteration:  4
+Result: 1/28396 = 0.00% correct
+Predictions: 20967/28396 = 73.84% correct
+Adaptive Compute Iteration:  5
+Result: 2/21113 = 0.01% correct
+Predictions: 18918/21113 = 89.60% correct
+Adaptive Compute Iteration:  6
+Result: 1/19064 = 0.01% correct
+Predictions: 18274/19064 = 95.86% correct
+Adaptive Compute Iteration:  7
+Result: 0/18420 = 0.00% correct
+Predictions: 18016/18420 = 97.81% correct
+Adaptive Compute Iteration:  8
+Result: 0/18163 = 0.00% correct
+Predictions: 17916/18163 = 98.64% correct
+Adaptive Compute Iteration:  9
+Result: 0/18063 = 0.00% correct
+Predictions: 17896/18063 = 99.08% correct
+Final score: 42/59999 = 0.07% correct
+
+
+
+Test exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/60000 = 0.00% correct
+Predictions: 57/60000 = 0.10% correct
+Adaptive Compute Iteration:  1
+Result: 0/53577 = 0.00% correct
+Predictions: 1387/53577 = 2.59% correct
+Adaptive Compute Iteration:  2
+Result: 1/46451 = 0.00% correct
+Predictions: 36159/46451 = 77.84% correct
+Adaptive Compute Iteration:  3
+Result: 1/36196 = 0.00% correct
+Predictions: 31617/36196 = 87.35% correct
+Adaptive Compute Iteration:  4
+Result: 0/31732 = 0.00% correct
+Predictions: 27217/31732 = 85.77% correct
+Adaptive Compute Iteration:  5
+Result: 1/27245 = 0.00% correct
+Predictions: 25726/27245 = 94.42% correct
+Adaptive Compute Iteration:  6
+Result: 0/25792 = 0.00% correct
+Predictions: 25232/25792 = 97.83% correct
+Adaptive Compute Iteration:  7
+Result: 0/25276 = 0.00% correct
+Predictions: 25082/25276 = 99.23% correct
+Adaptive Compute Iteration:  8
+Result: 0/25122 = 0.00% correct
+Predictions: 25036/25122 = 99.66% correct
+Adaptive Compute Iteration:  9
+Result: 0/25076 = 0.00% correct
+Predictions: 25022/25076 = 99.78% correct
+Final score: 3/59996 = 0.01% correct
+
+
+
+Training Iteration: 8
+
+Epochs: 10
+Size: 72000
+Marker: 0.2
+Warm: False
+AC: 13
+

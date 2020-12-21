@@ -14,10 +14,11 @@ class MathDataset(Dataset):
     
     """
 
-    def __init__(self, fname, MD, marker_data=0.2, size=-1):
+    def __init__(self, fname, MD, marker_data=0.2, remove_memory=0.15, size=-1):
         self.MD = MD
         self.mem_slots = MD.mem_slots
         self.marker_data = marker_data
+        self.remove_memory = remove_memory
         self.data_lines = 4
         self.dataset = self.MD.prepare_data(fname) # Extract data, source, memory, and target        
         self.ixes = np.array(list(range(len(self.dataset[0])))) 
@@ -33,7 +34,7 @@ class MathDataset(Dataset):
             xy.append(self.dataset[i][idx])
             
         use_marker = random.random() < self.marker_data
-        src, mem, trg = self.MD.create_marker_data(xy) if use_marker else self.MD.create_math_data(xy)
+        src, mem, trg = self.MD.create_marker_data(xy) if use_marker else self.MD.create_math_data(xy, self.remove_memory)
         src_mem_trg = self.MD.list2tokens(src + mem + trg)
         x = self.MD.x2Canvas(src_mem_trg)
         y = self.MD.y2Canvas(src_mem_trg)
