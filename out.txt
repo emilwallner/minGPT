@@ -1,0 +1,58 @@
+257
+102
+27
+Training Iteration: 0
+
+Epochs: 1
+Size: 50000
+Marker: 0.0
+Warm: True
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/50000 = 0.00% correct
+Predictions: 0/50000 = 0.00% correct
+Final score: 0/50000 = 0.00% correct
+
+
+
+Training Iteration: 1
+
+Epochs: 1
+Size: 50000
+Marker: 0.2
+Warm: True
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/50000 = 0.00% correct
+Predictions: 208/50000 = 0.42% correct
+Final score: 0/50000 = 0.00% correct
+
+
+
+Training Iteration: 2
+
+Epochs: 1
+Size: 50000
+Marker: 0.2
+Warm: True
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/50000 = 0.00% correct
+Predictions: 20483/50000 = 40.97% correct
+Final score: 0/50000 = 0.00% correct
+
+
+
+Training Iteration: 3
+
+Epochs: 1
+Size: 50000
+Marker: 0.2
+Warm: True
+

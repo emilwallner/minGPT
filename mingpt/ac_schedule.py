@@ -24,7 +24,7 @@ class AcSchedule:
         if current_it < self.mem_slots:
             epoch = 1
             size = self.init_sz
-            ac = current_it + 1
+            ac = 1
             warmup = True
         else:
             size = self.init_sz * (self.scale_sz**current_it)

@@ -48,7 +48,7 @@ class AdaptiveExaminer:
                 os.remove(self.correct_fn)
         
         r = self.results
-        print("Final score: %d/%d = %.2f%% correct" % (np.sum(r), len(r), 100*np.mean(r)))
+        print("Final score: %d/%d = %.2f%% correct\n\n\n" % (np.sum(r), len(r), 100*np.mean(r)))
         
     def one_loop(self):
         
@@ -60,7 +60,6 @@ class AdaptiveExaminer:
         if self.iter == 0: self.initiate_at_start()
         
         dataset_len = len(loader)
-        print(dataset_len)
         pbar = tqdm(enumerate(loader), total=dataset_len)
         batch = []
         for b, (x, y) in pbar:

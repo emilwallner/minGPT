@@ -130,7 +130,7 @@ class Trainer:
 
             # supports early stopping based on the test loss, or just save always if no test set is provided
             good_model = self.test_dataset is None or test_loss < best_loss
-            if self.config.ckpt_path is not None and good_model:
+            if self.config.ckpt_path is not None and good_model and self.test_dataset != None:
                 best_loss = test_loss
                 print('Best Loss: ', best_loss)
                 #self.save_checkpoint()
