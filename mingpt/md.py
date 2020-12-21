@@ -48,7 +48,7 @@ class MemData:
         os.remove(fname)
         test_fname = head_tail[0] + '/test_' + head_tail[1]
         train_fname = head_tail[0] + '/train_' + head_tail[1]
-        org_fname = head_tail[0] + '/org_' + head_tail[1]
+        org_fname = head_tail[0] + '/org_train_' + head_tail[1]
         
         self.create_new_file(test_fname, src, trg, test_indexes)
         self.create_new_file(train_fname, src, trg, train_indexes[:warmup_sz])

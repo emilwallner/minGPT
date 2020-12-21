@@ -21,17 +21,19 @@ class AcSchedule:
         
     def create(self, current_it):
         
-        if current_it < self.mem_slots:
+        current_it += 1
+        
+        if current_it <= self.mem_slots:
             epoch = 1
             size = self.init_sz
             ac = 1
             warmup = True
         else:
-            size = self.init_sz * (self.scale_sz**current_it)
+            size = self.init_sz * (self.scale_sz**(current_it - self.mem_slots))
             if size < self.len:epoch = 1
             else: epoch = math.ceil(size/self.len)
             size = min(size, self.len)
-            ac = ((current_it - 6) * 3) + 7
+            ac = ((current_it - self.mem_slots) * 3) + 7
             warmup = False
         
         marker_data = 0.0 if current_it == 0 else self.marker_data

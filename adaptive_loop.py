@@ -116,10 +116,11 @@ while(current_it < max_it):
     epoch, size, ac, marker_data, warmup = schedule.create(current_it)
     
     # Switch between main training and marker training
-    print(f"Training Iteration: {current_it}\n\nEpochs: {epoch}\nSize: {size}\nMarker: {marker_data}\nWarm: {warmup}\n")
+    print(f"Training Iteration: {current_it}\n\nEpochs: {epoch}\nSize: {size}\nMarker: {marker_data}\nWarm: {warmup}\nAC: {ac}\n")
     
     train_dataset = MathDataset(fname=fn_train, MD=MD, marker_data=marker_data)
-    test_dataset = MathDataset(fname=fn_test, MD=MD, marker_data=0.0) if not warmup else None
+    test_dataset = None
+    #test_dataset = MathDataset(fname=fn_test, MD=MD, marker_data=0.0) if not warmup else None
     
     # Trainer Config
     tconf = TrainerConfig(max_epochs=epoch, batch_size=batch_size, learning_rate=6e-4,
