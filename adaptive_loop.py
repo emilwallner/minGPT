@@ -57,7 +57,7 @@ fn_data = 'run/numbers__list_prime_factors.txt'
 
 
 # Add memory data structure to training data
-memory_slots = 7
+memory_slots = 4
 MD = MemData(memory_slots, debug=0)
 MD.initiate_mem_slot_data(fn_data, warmup_sz=50000)
 

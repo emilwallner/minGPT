@@ -14,7 +14,7 @@ class MathDataset(Dataset):
     
     """
 
-    def __init__(self, fname, MD, marker_data=0.2, remove_memory=0.1, size=-1):
+    def __init__(self, fname, MD, marker_data=0.2, remove_memory=0.2, size=-1):
         self.MD = MD
         self.mem_slots = MD.mem_slots
         self.marker_data = marker_data

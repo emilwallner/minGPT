@@ -1,5 +1,4 @@
-12/21/2020 15:42:32 - INFO - mingpt.model -   number of parameters: 3.277568e+06
-257
+176
 102
 27
 Training Iteration: 0
@@ -10,4 +9,159 @@ Marker: 0.0
 Warm: True
 AC: 1
 
-  0%|                                                                                                                                                   | 0/131 [00:00<?, ?it/s]epoch 1 iter 0: train loss 4.67371. lr 5.999999e-04:   0%|                                                                                              | 0/131 [00:00<?, ?it/s]epoch 1 iter 0: train loss 4.67371. lr 5.999999e-04:   1%|▋                                                                                     | 1/131 [00:00<01:36,  1.35it/s]epoch 1 iter 1: train loss 3.73590. lr 5.999997e-04:   1%|▋                                                                                     | 1/131 [00:01<01:36,  1.35it/s]epoch 1 iter 1: train loss 3.73590. lr 5.999997e-04:   2%|█▎                                                                                    | 2/131 [00:01<01:25,  1.52it/s]epoch 1 iter 2: train loss 3.29640. lr 5.999993e-04:   2%|█▎                                                                                    | 2/131 [00:01<01:25,  1.52it/s]epoch 1 iter 2: train loss 3.29640. lr 5.999993e-04:   2%|█▉                                                                                    | 3/131 [00:01<01:16,  1.66it/s]epoch 1 iter 3: train loss 3.09613. lr 5.999986e-04:   2%|█▉                                                                                    | 3/131 [00:02<01:16,  1.66it/s]epoch 1 iter 3: train loss 3.09613. lr 5.999986e-04:   3%|██▋                                                                                   | 4/131 [00:02<01:11,  1.79it/s]epoch 1 iter 4: train loss 2.81422. lr 5.999978e-04:   3%|██▋                                                                                   | 4/131 [00:02<01:11,  1.79it/s]epoch 1 iter 4: train loss 2.81422. lr 5.999978e-04:   4%|███▎                                                                                  | 5/131 [00:02<01:06,  1.88it/s]epoch 1 iter 5: train loss 2.59574. lr 5.999968e-04:   4%|███▎                                                                                  | 5/131 [00:03<01:06,  1.88it/s]epoch 1 iter 5: train loss 2.59574. lr 5.999968e-04:   5%|███▉                                                                                  | 6/131 [00:03<01:03,  1.96it/s]epoch 1 iter 6: train loss 2.43687. lr 5.999957e-04:   5%|███▉                                                                                  | 6/131 [00:03<01:03,  1.96it/s]epoch 1 iter 6: train loss 2.43687. lr 5.999957e-04:   5%|████▌                                                                                 | 7/131 [00:03<01:01,  2.01it/s]epoch 1 iter 7: train loss 2.33817. lr 5.999943e-04:   5%|████▌                                                                                 | 7/131 [00:03<01:01,  2.01it/s]epoch 1 iter 7: train loss 2.33817. lr 5.999943e-04:   6%|█████▎                                                                                | 8/131 [00:03<00:59,  2.05it/s]epoch 1 iter 8: train loss 2.22629. lr 5.999928e-04:   6%|█████▎                                                                                | 8/131 [00:04<00:59,  2.05it/s]epoch 1 iter 8: train loss 2.22629. lr 5.999928e-04:   7%|█████▉                                                                                | 9/131 [00:04<00:58,  2.08it/s]epoch 1 iter 9: train loss 2.14481. lr 5.999911e-04:   7%|█████▉                                                                                | 9/131 [00:04<00:58,  2.08it/s]epoch 1 iter 9: train loss 2.14481. lr 5.999911e-04:   8%|██████▍                                                                              | 10/131 [00:04<00:57,  2.10it/s]epoch 1 iter 10: train loss 2.05580. lr 5.999892e-04:   8%|██████▍                                                                             | 10/131 [00:05<00:57,  2.10it/s]epoch 1 iter 10: train loss 2.05580. lr 5.999892e-04:   8%|███████                                                                             | 11/131 [00:05<00:56,  2.11it/s]epoch 1 iter 11: train loss 1.97736. lr 5.999871e-04:   8%|███████                                                                             | 11/131 [00:05<00:56,  2.11it/s]epoch 1 iter 11: train loss 1.97736. lr 5.999871e-04:   9%|███████▋                                                                            | 12/131 [00:05<00:56,  2.12it/s]epoch 1 iter 12: train loss 1.90881. lr 5.999848e-04:   9%|███████▋                                                                            | 12/131 [00:06<00:56,  2.12it/s]epoch 1 iter 12: train loss 1.90881. lr 5.999848e-04:  10%|████████▎                                                                           | 13/131 [00:06<00:55,  2.12it/s]epoch 1 iter 13: train loss 1.85559. lr 5.999823e-04:  10%|████████▎                                                                           | 13/131 [00:06<00:55,  2.12it/s]epoch 1 iter 13: train loss 1.85559. lr 5.999823e-04:  11%|████████▉                                                                           | 14/131 [00:06<00:54,  2.13it/s]epoch 1 iter 14: train loss 1.82216. lr 5.999796e-04:  11%|████████▉                                                                           | 14/131 [00:07<00:54,  2.13it/s]epoch 1 iter 14: train loss 1.82216. lr 5.999796e-04:  11%|█████████▌                                                                          | 15/131 [00:07<00:54,  2.13it/s]epoch 1 iter 15: train loss 1.78508. lr 5.999768e-04:  11%|█████████▌                                                                          | 15/131 [00:07<00:54,  2.13it/s]epoch 1 iter 15: train loss 1.78508. lr 5.999768e-04:  12%|██████████▎                                                                         | 16/131 [00:07<00:53,  2.14it/s]epoch 1 iter 16: train loss 1.75895. lr 5.999738e-04:  12%|██████████▎                                                                         | 16/131 [00:08<00:53,  2.14it/s]epoch 1 iter 16: train loss 1.75895. lr 5.999738e-04:  13%|██████████▉                                                                         | 17/131 [00:08<00:53,  2.14it/s]epoch 1 iter 17: train loss 1.75205. lr 5.999706e-04:  13%|██████████▉                                                                         | 17/131 [00:08<00:53,  2.14it/s]epoch 1 iter 17: train loss 1.75205. lr 5.999706e-04:  14%|███████████▌                                                                        | 18/131 [00:08<00:52,  2.14it/s]epoch 1 iter 18: train loss 1.73722. lr 5.999672e-04:  14%|███████████▌                                                                        | 18/131 [00:09<00:52,  2.14it/s]epoch 1 iter 18: train loss 1.73722. lr 5.999672e-04:  15%|████████████▏                                                                       | 19/131 [00:09<00:52,  2.14it/s]epoch 1 iter 19: train loss 1.71649. lr 5.999636e-04:  15%|████████████▏                                                                       | 19/131 [00:09<00:52,  2.14it/s]epoch 1 iter 19: train loss 1.71649. lr 5.999636e-04:  15%|████████████▊                                                                       | 20/131 [00:09<00:51,  2.14it/s]epoch 1 iter 20: train loss 1.66747. lr 5.999598e-04:  15%|████████████▊                                                                       | 20/131 [00:10<00:51,  2.14it/s]epoch 1 iter 20: train loss 1.66747. lr 5.999598e-04:  16%|█████████████▍                                                                      | 21/131 [00:10<00:51,  2.14it/s]epoch 1 iter 21: train loss 1.66425. lr 5.999559e-04:  16%|█████████████▍                                                                      | 21/131 [00:10<00:51,  2.14it/s]epoch 1 iter 21: train loss 1.66425. lr 5.999559e-04:  17%|██████████████                                                                      | 22/131 [00:10<00:50,  2.15it/s]epoch 1 iter 22: train loss 1.63888. lr 5.999517e-04:  17%|██████████████                                                                      | 22/131 [00:10<00:50,  2.15it/s]epoch 1 iter 22: train loss 1.63888. lr 5.999517e-04:  18%|██████████████▋                                                                     | 23/131 [00:10<00:50,  2.15it/s]epoch 1 iter 23: train loss 1.64274. lr 5.999474e-04:  18%|██████████████▋                                                                     | 23/131 [00:11<00:50,  2.15it/s]epoch 1 iter 23: train loss 1.64274. lr 5.999474e-04:  18%|███████████████▍                                                                    | 24/131 [00:11<00:49,  2.15it/s]epoch 1 iter 24: train loss 1.65156. lr 5.999429e-04:  18%|███████████████▍                                                                    | 24/131 [00:11<00:49,  2.15it/s]epoch 1 iter 24: train loss 1.65156. lr 5.999429e-04:  19%|████████████████                                                                    | 25/131 [00:11<00:49,  2.15it/s]epoch 1 iter 25: train loss 1.62179. lr 5.999381e-04:  19%|████████████████                                                                    | 25/131 [00:12<00:49,  2.15it/s]epoch 1 iter 25: train loss 1.62179. lr 5.999381e-04:  20%|████████████████▋                                                                   | 26/131 [00:12<00:48,  2.15it/s]epoch 1 iter 26: train loss 1.60757. lr 5.999332e-04:  20%|████████████████▋                                                                   | 26/131 [00:12<00:48,  2.15it/s]epoch 1 iter 26: train loss 1.60757. lr 5.999332e-04:  21%|█████████████████▎                                                                  | 27/131 [00:12<00:48,  2.15it/s]epoch 1 iter 27: train loss 1.61382. lr 5.999282e-04:  21%|█████████████████▎                                                                  | 27/131 [00:13<00:48,  2.15it/s]epoch 1 iter 27: train loss 1.61382. lr 5.999282e-04:  21%|█████████████████▉                                                                  | 28/131 [00:13<00:47,  2.15it/s]epoch 1 iter 28: train loss 1.62682. lr 5.999230e-04:  21%|█████████████████▉                                                                  | 28/131 [00:13<00:47,  2.15it/s]epoch 1 iter 28: train loss 1.62682. lr 5.999230e-04:  22%|██████████████████▌                                                                 | 29/131 [00:13<00:47,  2.15it/s]epoch 1 iter 29: train loss 1.60057. lr 5.999175e-04:  22%|██████████████████▌                                                                 | 29/131 [00:14<00:47,  2.15it/s]epoch 1 iter 29: train loss 1.60057. lr 5.999175e-04:  23%|███████████████████▏                                                                | 30/131 [00:14<00:47,  2.14it/s]epoch 1 iter 30: train loss 1.59570. lr 5.999119e-04:  23%|███████████████████▏                                                                | 30/131 [00:14<00:47,  2.14it/s]epoch 1 iter 30: train loss 1.59570. lr 5.999119e-04:  24%|███████████████████▉                                                                | 31/131 [00:14<00:46,  2.14it/s]epoch 1 iter 31: train loss 1.57957. lr 5.999061e-04:  24%|███████████████████▉                                                                | 31/131 [00:15<00:46,  2.14it/s]epoch 1 iter 31: train loss 1.57957. lr 5.999061e-04:  24%|████████████████████▌                                                               | 32/131 [00:15<00:46,  2.15it/s]epoch 1 iter 32: train loss 1.58995. lr 5.999002e-04:  24%|████████████████████▌                                                               | 32/131 [00:15<00:46,  2.15it/s]epoch 1 iter 32: train loss 1.58995. lr 5.999002e-04:  25%|█████████████████████▏                                                              | 33/131 [00:15<00:45,  2.15it/s]epoch 1 iter 33: train loss 1.59324. lr 5.998940e-04:  25%|█████████████████████▏                                                              | 33/131 [00:16<00:45,  2.15it/s]epoch 1 iter 33: train loss 1.59324. lr 5.998940e-04:  26%|█████████████████████▊                                                              | 34/131 [00:16<00:45,  2.15it/s]epoch 1 iter 34: train loss 1.57527. lr 5.998876e-04:  26%|█████████████████████▊                                                              | 34/131 [00:16<00:45,  2.15it/s]epoch 1 iter 34: train loss 1.57527. lr 5.998876e-04:  27%|██████████████████████▍                                                             | 35/131 [00:16<00:44,  2.15it/s]epoch 1 iter 35: train loss 1.60725. lr 5.998810e-04:  27%|██████████████████████▍                                                             | 35/131 [00:17<00:44,  2.15it/s]epoch 1 iter 35: train loss 1.60725. lr 5.998810e-04:  27%|███████████████████████                                                             | 36/131 [00:17<00:44,  2.14it/s]epoch 1 iter 36: train loss 1.62663. lr 5.998743e-04:  27%|███████████████████████                                                             | 36/131 [00:17<00:44,  2.14it/s]epoch 1 iter 36: train loss 1.62663. lr 5.998743e-04:  28%|███████████████████████▋                                                            | 37/131 [00:17<00:43,  2.14it/s]epoch 1 iter 37: train loss 1.57296. lr 5.998673e-04:  28%|███████████████████████▋                                                            | 37/131 [00:17<00:43,  2.14it/s]epoch 1 iter 37: train loss 1.57296. lr 5.998673e-04:  29%|████████████████████████▎                                                           | 38/131 [00:17<00:43,  2.14it/s]epoch 1 iter 38: train loss 1.57765. lr 5.998602e-04:  29%|████████████████████████▎                                                           | 38/131 [00:18<00:43,  2.14it/s]epoch 1 iter 38: train loss 1.57765. lr 5.998602e-04:  30%|█████████████████████████                                                           | 39/131 [00:18<00:42,  2.14it/s]epoch 1 iter 39: train loss 1.61597. lr 5.998529e-04:  30%|█████████████████████████                                                           | 39/131 [00:18<00:42,  2.14it/s]epoch 1 iter 39: train loss 1.61597. lr 5.998529e-04:  31%|█████████████████████████▋                                                          | 40/131 [00:18<00:42,  2.14it/s]epoch 1 iter 40: train loss 1.56379. lr 5.998454e-04:  31%|█████████████████████████▋                                                          | 40/131 [00:19<00:42,  2.14it/s]epoch 1 iter 40: train loss 1.56379. lr 5.998454e-04:  31%|██████████████████████████▎                                                         | 41/131 [00:19<00:42,  2.14it/s]epoch 1 iter 41: train loss 1.59867. lr 5.998378e-04:  31%|██████████████████████████▎                                                         | 41/131 [00:19<00:42,  2.14it/s]epoch 1 iter 41: train loss 1.59867. lr 5.998378e-04:  32%|██████████████████████████▉                                                         | 42/131 [00:19<00:41,  2.14it/s]epoch 1 iter 42: train loss 1.58360. lr 5.998299e-04:  32%|██████████████████████████▉                                                         | 42/131 [00:20<00:41,  2.14it/s]epoch 1 iter 42: train loss 1.58360. lr 5.998299e-04:  33%|███████████████████████████▌                                                        | 43/131 [00:20<00:41,  2.14it/s]epoch 1 iter 43: train loss 1.58360. lr 5.998220e-04:  33%|███████████████████████████▌                                                        | 43/131 [00:20<00:41,  2.14it/s]epoch 1 iter 43: train loss 1.58360. lr 5.998220e-04:  34%|████████████████████████████▏                                                       | 44/131 [00:20<00:40,  2.13it/s]epoch 1 iter 44: train loss 1.55672. lr 5.998137e-04:  34%|████████████████████████████▏                                                       | 44/131 [00:21<00:40,  2.13it/s]epoch 1 iter 44: train loss 1.55672. lr 5.998137e-04:  34%|████████████████████████████▊                                                       | 45/131 [00:21<00:40,  2.14it/s]
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/50000 = 0.00% correct
+Predictions: 0/50000 = 0.00% correct
+Final score: 0/50000 = 0.00% correct
+
+
+
+Training Iteration: 1
+
+Epochs: 5
+Size: 50000
+Marker: 0.2
+Warm: True
+AC: 1
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/49999 = 0.00% correct
+Predictions: 36142/49999 = 72.29% correct
+Final score: 0/49999 = 0.00% correct
+
+
+
+Training Iteration: 2
+
+Epochs: 5
+Size: 50000
+Marker: 0.2
+Warm: True
+AC: 1
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 0/49999 = 0.00% correct
+Predictions: 40888/49999 = 81.78% correct
+Final score: 0/49999 = 0.00% correct
+
+
+
+Training Iteration: 3
+
+Epochs: 5
+Size: 50000
+Marker: 0.2
+Warm: True
+AC: 1
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 75/49999 = 0.15% correct
+Predictions: 34775/49999 = 69.55% correct
+Final score: 75/49999 = 0.15% correct
+
+
+
+Training Iteration: 4
+
+Epochs: 10
+Size: 75000
+Marker: 0.2
+Warm: False
+AC: 4
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 16/75000 = 0.02% correct
+Predictions: 16850/75000 = 22.47% correct
+Adaptive Compute Iteration:  1
+Result: 155/37927 = 0.41% correct
+Predictions: 22068/37927 = 58.19% correct
+Adaptive Compute Iteration:  2
+Result: 43/27379 = 0.16% correct
+Predictions: 23968/27379 = 87.54% correct
+Adaptive Compute Iteration:  3
+Result: 4/25932 = 0.02% correct
+Predictions: 22048/25932 = 85.02% correct
+Final score: 218/75000 = 0.29% correct
+
+
+
+Test exam 
+
+Adaptive Compute Iteration:  0
+Result: 5/66666 = 0.01% correct
+Predictions: 5137/66666 = 7.71% correct
+Adaptive Compute Iteration:  1
+Result: 17/15139 = 0.11% correct
+Predictions: 6795/15139 = 44.88% correct
+Adaptive Compute Iteration:  2
+Result: 10/9130 = 0.11% correct
+Predictions: 6608/9130 = 72.38% correct
+Adaptive Compute Iteration:  3
+Result: 0/7427 = 0.00% correct
+Predictions: 5726/7427 = 77.10% correct
+Final score: 32/66664 = 0.05% correct
+
+
+
+Training Iteration: 5
+
+Epochs: 10
+Size: 112500
+Marker: 0.2
+Warm: False
+AC: 4
+
+Training exam 
+
+Adaptive Compute Iteration:  0
+Result: 712/112500 = 0.63% correct
+Predictions: 47336/112500 = 42.08% correct
+Adaptive Compute Iteration:  1
+Result: 82/99260 = 0.08% correct
+Predictions: 42212/99260 = 42.53% correct
+Adaptive Compute Iteration:  2
+Result: 6/96093 = 0.01% correct
+Predictions: 44745/96093 = 46.56% correct
+Adaptive Compute Iteration:  3
+Result: 2/94065 = 0.00% correct
+Predictions: 40247/94065 = 42.79% correct
+Final score: 802/112499 = 0.71% correct
+
+
+
+Test exam 
+
+Adaptive Compute Iteration:  0
+Result: 75/66666 = 0.11% correct
+Predictions: 41438/66666 = 62.16% correct
+Adaptive Compute Iteration:  1
+Result: 9/56974 = 0.02% correct
+Predictions: 18224/56974 = 31.99% correct
+Adaptive Compute Iteration:  2
+Result: 0/44409 = 0.00% correct
+Predictions: 20174/44409 = 45.43% correct
+Adaptive Compute Iteration:  3
+Result: 1/43326 = 0.00% correct
+Predictions: 18094/43326 = 41.76% correct
+Final score: 85/66666 = 0.13% correct
+
+
+
+Training Iteration: 6
+
+Epochs: 10
+Size: 168750
+Marker: 0.2
+Warm: False
+AC: 5
+

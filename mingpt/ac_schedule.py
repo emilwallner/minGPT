@@ -14,7 +14,7 @@ class AcSchedule:
         # MemData, Trainer, and Dataset classes
         
         self.init_sz = 50000
-        self.scale_sz = 1.2
+        self.scale_sz = 1.5
         self.mem_slots = MD.mem_slots
         self.len = MD.dataset_len
         self.marker_data = marker_data
@@ -34,7 +34,7 @@ class AcSchedule:
             #if size < self.len:epoch = 5
             #else: epoch = max(math.ceil(size/self.len), 5)
             size = min(size, self.len)
-            ac = ((current_it - self.mem_slots) * 3) + 7
+            ac = math.ceil((current_it - self.mem_slots) / 2) + 3
             warmup = False
         
         marker_data = 0.0 if current_it == 1 else self.marker_data
